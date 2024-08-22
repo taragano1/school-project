@@ -1,5 +1,5 @@
 const { query } = require("express");
-const connection = require("../../bl/connectToDB");
+const connection = require("../../dal/connectToDB");
 
 //INSERT
 function insertGender(name ,func) {
@@ -16,7 +16,7 @@ function insertGender(name ,func) {
   }
 
   //SELECT
-function selectGender(func) {
+function selectAllGenders(func) {
     let query = `SELECT * FROM gender`;
     connection.query(query,(err, results) => {
       if (err) {
@@ -78,7 +78,7 @@ function updateGender(id, columnName, newData, func) {
   module.exports = {
     deleteGender,
     updateGender,
-    selectGender,
+    selectAllGenders,
     selectGenderById,
     selectGenderByName,
     insertGender

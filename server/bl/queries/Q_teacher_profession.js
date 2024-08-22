@@ -1,5 +1,5 @@
 const { query } = require("express");
-const connection = require("../../bl/connectToDB");
+const connection = require("../../dal/connectToDB");
 
 //INSERT
 function insertDocument( id_teacher,document ,func) {

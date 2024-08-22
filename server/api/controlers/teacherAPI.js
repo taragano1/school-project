@@ -5,10 +5,10 @@ const {
   selectTeacherById,
   updateTeacher,
   deleteTeacher
-} = require("../../dal/queries/Q_teacher");
-const { deleteLessonByTeacher } = require("../../dal/queries/Q_lesson");
-const { deleteUser}= require("../../dal/queries/Q_users");
-const { deletePassword } = require("../../dal/queries/Q_passwords");
+} = require("../../bl/queries/Q_teacher");
+const { deleteLessonByTeacher } = require("../../bl/queries/Q_lesson");
+const { deleteUser}= require("../../bl/queries/Q_users");
+const { deletePassword } = require("../../bl/queries/Q_passwords");
 
 const app = express.Router();
 

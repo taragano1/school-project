@@ -1,7 +1,7 @@
 const express = require("express");
 const {
  selectPasswordById
-} = require("../../dal/queries/selectPasswordById");
+} = require("../../bl/queries/Q_passwords");
 
 const app = express.Router();
 
