@@ -4,6 +4,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "shirSql.123",
+  port:3306,
   database: "mydb"
 });
 
