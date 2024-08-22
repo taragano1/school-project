@@ -1,5 +1,5 @@
 const { query } = require("express");
-const connection = require("../../bl/connectToDB");
+const connection = require("../../dal/connectToDB");
 
 //INSERT
 function insertLesson(id_teacher , id_subject , id_student , rating , feedback ,date , hour ,func) {
@@ -26,7 +26,7 @@ function selectAllLessons(func) {
     });
   }
 
-  function selectLessonByid( id, func) {
+  function selectLessonById( id, func) {
     let query = `SELECT * FROM lesson WHERE id=?`;
 
     connection.query(query, [id], (err, results) => {
@@ -107,7 +107,7 @@ function selectAllLessons(func) {
   module.exports = {
     insertLesson,
     selectAllLessons,
-    selectLessonByid,
+    selectLessonById,
     selectLessonByTeacher,
     updateLesson,
     deleteLesson,

@@ -5,9 +5,9 @@ const {
   selectStudentById,
   updateStudent,
   deleteStudent,
-} = require("../../dal/queries/Q_student");
-const {deleteLessonByStudent}=require("../../dal/queries/Q_lesson");
-const {deletePassword}=require("../../dal/queries/Q_passwords");
+} = require("../../bl/queries/Q_student");
+const {deleteLessonByStudent}=require("../../bl/queries/Q_lesson");
+const {deletePassword}=require("../../bl/queries/Q_passwords");
 
 const app = express.Router();
 

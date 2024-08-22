@@ -14,14 +14,12 @@ app.use(express.json());
 // app.use(cors());
 
 // Use the routes with appropriate base paths
-app.use('/api/users', usersAPI);
-app.use('/api/teachers', teacherAPI);
-app.use('/api/students', studentAPI);
-app.use('/api/lessons', lessonAPI);
-app.use('/genders', genderAPI);
-// app.use(genderAPI);
-app.use('/specializations', specializationAPI);
-// app.use( specializationAPI);
+app.use('/api', usersAPI);
+app.use('/api', teacherAPI);
+app.use('/api', studentAPI);
+app.use('/api', lessonAPI);
+app.use('/api', genderAPI);
+
 
 
 app.get("/", (req, res) => {

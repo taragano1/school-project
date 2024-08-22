@@ -1,9 +1,15 @@
 const { log } = require("console");
 const { query } = require("express");
-const connection = require("../../bl/connectToDB");
+const connection = require("../../dal/connectToDB");
 
 //INSERT
 function insertUsers(id, fname, lname, email, phone, city, birthday, address, gender_id, func) {
+  // בדיקה אם כל הנתונים הנדרשים קיימים
+  if (!id || !fname || !lname || !email || !phone || !city || !birthday || !address || !gender_id) {
+    return func(new Error("All fields are required"));
+  }
+
+  // הכנסת הנתונים לטבלה
   connection.query(
     `INSERT INTO users (id, fname, lname, email, phone, city, birthday, address, gender_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [id, fname, lname, email, phone, city, birthday, address, gender_id],
@@ -105,6 +111,20 @@ function deleteUser( id, func) {
     }
   );
 }
+//פונקציות כלליות שהערכת זקוקה להן בעבור טבלה זו
+function checkUserIdExists(id, func) {
+  connection.query(
+    `SELECT COUNT(*) AS count FROM users WHERE id = ?`,
+    [id],
+    (err, result) => {
+      if (err) {
+        return func(err);
+      }
+      const exists = result[0].count > 0;
+      func(null, exists);
+    }
+  );
+}
 
 
 module.exports = {
@@ -116,5 +136,6 @@ module.exports = {
   selectUsersByGender,
   selectUsersByEmail,
   updateUser,
+  checkUserIdExists,
   deleteUser
 };

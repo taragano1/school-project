@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express.Router();
-const { selectLessonById, selectAllLessons, selectLessonByTeacher, insertLesson, updateLesson, deleteLesson  } = require("../../dal/queries/Q_lesson");
+const { selectLessonById, selectAllLessons, selectLessonByTeacher, insertLesson, updateLesson, deleteLesson  } = require("../../bl/queries/Q_lesson");
 
 app.get("/lesson/:id", (req, res) => {
   const lessonId = req.params.id;
@@ -24,7 +24,7 @@ app.get("/lessons", (req, res) => {
 
 app.get("/lesson/:teacher", (req, res) => {
     const lessonId = req.params.id_teacher;
-      selectLessonByTeacher(lessonId, (err, results) => {
+    selectLessonByTeacher(lessonId, (err, results) => {
       if (err) {
         return res.status(500).json({ error: "Database query error" });
       }

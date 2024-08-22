@@ -5,7 +5,7 @@ const {
   selectScheduleById,
   updateSchedule,
   deleteSchedule,
-} = require("../../dal/queries/Q_schedule");
+} = require("../../bl/queries/Q_schedule");
 
 const app = express.Router();
 
