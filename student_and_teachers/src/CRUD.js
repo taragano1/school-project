@@ -10,28 +10,29 @@ export function Read(query) {
     });
 }
 
-export function Add(serverAddress, newObj) {// & Creat
+export function Add(serverAddress, Obj) {
   let fullpath = serverPath + serverAddress;
 
-  console.log("Add: ", fullpath);
+  console.log("AddPassword: ", fullpath);
 
   return fetch(fullpath, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(newObj),
+    body: JSON.stringify(Obj),
   })
     .then((response) => {
-      response.json();
       if (response.ok) {
-        alert("add success");
+        console.log("Password added successfully");
       }
+      return response.json();
     })
     .then((data) => {
       return data;
     });
 }
+
 
 export function Update(query, updatedData) {
   let fullpath = serverPath + query;

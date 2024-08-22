@@ -1,8 +1,10 @@
 const express = require("express");
 const {
- selectPasswordById
+ selectPasswordById, 
 } = require("../../dal/queries/selectPasswordById");
-
+const {
+  insertPassword, // פונקציה להוספת סיסמאות
+} = require("../../dal/queries/insertPassword");
 const app = express.Router();
 
 
@@ -20,5 +22,15 @@ app.get("/password/:id", (req, res) => {
     });
   });
 
-  
+  // POST - הוספת סיסמא חדשה
+app.post("/passwords", (req, res) => {
+  const { userId, password } = req.body;
+  insertPassword(userId, password, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database insertion error" });
+    }
+    res.status(201).json({ message: "Password added successfully" });
+  });
+});
+
 module.exports = app;

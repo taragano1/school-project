@@ -1,40 +1,86 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignInStudent.css";
-import "../CRUD"
+import "../CRUD";
 import { Add } from "../CRUD";
 export default function SignInStudent() {
-  const navigate=useNavigate();
+const navigate = useNavigate();  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     id: "",
-    gender: "",
-    phone: "",
-    birthDate: "",
     email: "",
-    nationality: "",
+    phone: "",
     city: "",
+    birthDate: "",
     address: "",
-    studyNeed: ""
+    gender: "",
+    studyNeed: "",
+    class: "",
+    password: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your form submission logic here
-    console.log(formData); // For demonstration purposes
+  
+    // Convert gender to number
+    const genderMap = {
+      זכר: 1,
+      נקבה: 2,
+    };
+    
+    const genderId = genderMap[formData.gender];
+  
+    // Extract the necessary fields for the USER table
+    const userPayload = {
+      id: formData.id,
+      fname: formData.firstName,
+      lname: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      city: formData.city,
+      birthday: formData.birthDate,
+      address: formData.address,
+      gender_id: genderId, // Use the mapped gender ID
+    };
+  
+    // Save user data locally (optional)
     localStorage.setItem("LSCurrentUser", JSON.stringify(formData));
-    Add("/users",formData)
-    navigate(`/student/main/${formData.id}`);
+  
+    // Add the user to the 'users' table
+    Add("/users", userPayload)
+      .then(() => {
+        // Add the password to the 'passwords' table
+        return Add("/passwords", {
+          userId: formData.id,
+          password: formData.password,
+        });
+      })
+      .then(() => {
+        // Add the student to the 'students' table
+        return Add("/students", {
+          id: formData.id,
+          clas: formData.class,
+          specialization_id: formData.studyNeed,
+        });
+      })
+      .then(() => {
+        // Navigate to the student main page
+        navigate(`/student/main/${formData.id}`);
+      })
+      .catch((error) => console.error("Error:", error));
   };
+  
+  
+
 
   return (
     <div>
@@ -72,13 +118,12 @@ export default function SignInStudent() {
         </div>
         <div>
           <label>מגדר:</label>
-          <input
-            type="text"
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-          />
+          <select name="gender" value={formData.gender} onChange={handleChange}>
+            <option value="זכר">זכר</option>
+            <option value="נקבה"> נקבה</option>
+          </select>
         </div>
+        
         <div>
           <label>טלפון:</label>
           <input
@@ -107,15 +152,6 @@ export default function SignInStudent() {
           />
         </div>
         <div>
-          <label>לאום:</label>
-          <input
-            type="text"
-            name="nationality"
-            value={formData.nationality}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
           <label>עיר:</label>
           <input
             type="text"
@@ -134,13 +170,39 @@ export default function SignInStudent() {
           />
         </div>
         <div>
+          <label>סיסמא::</label>
+          <input
+            type="text"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>כיתה:</label>
+          <select name="class" value={formData.class} onChange={handleChange}>
+            <option value="א">א</option>
+            <option value="ב">ב</option>
+            <option value="ג">ג</option>
+            <option value="ד">ד</option>
+            <option value="ה">ה</option>
+            <option value="ו">ו</option>
+            <option value="ז">ז</option>
+            <option value="ח">ח</option>
+            <option value="ט">ט</option>
+            <option value="י">י</option>
+            <option value="יא">יא</option>
+            <option value="יב">יב</option>
+            <option value="אחר">אחר</option>
+          </select>
+        </div>
+        <div>
           <label>צורך הלימוד:</label>
           <select
             name="studyNeed"
             value={formData.studyNeed}
             onChange={handleChange}
           >
-            <option value="">בחר צורך הלימוד</option>
             <option value="יסודי">יסודי</option>
             <option value=" אקדמאי"> אקדמאי</option>
             <option value=" תיכון"> תיכון</option>

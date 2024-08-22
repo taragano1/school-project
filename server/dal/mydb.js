@@ -5,6 +5,7 @@ var connection = mysql.createConnection({
   user: "root",
   password: "shirSql.123",
   port: 3306,
+  database: "mydb"
 });
 
 connection.connect(function (err) {

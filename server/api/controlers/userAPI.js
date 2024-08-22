@@ -1,40 +1,14 @@
 const express = require("express");
 const {
-  insertTeacher,
-  selectAllTeacher,
-  selectTeacherById,
-  updateTeacher,
-  deleteTeacher
-} = require("../../dal/queries/Q_teacher");
-const { deleteLessonByTeacher } = require("../../dal/queries/Q_lesson");
-const { deleteUser, selectUsersByEmail}= require("../../dal/queries/Q_users");
-const { deletePassword } = require("../../dal/queries/Q_passwords");
+  insertUsers,
+  selectUsersById,
+  selectUsersByEmail,
+} = require("../../dal/queries/Q_users");
 
 const app = express.Router();
 
-
-// const express = require("express");
-// const selectUsers = require("../../dal/queries/Q_users").selectUsers;
-// const selectUsersById = require("../../dal/queries/Q_users").selectUsersById;
-// const updateUser = require("../../dal/queries/Q_users").updateUser;
-// const insertUsers = require("../../dal/queries/Q_users").insertUsers;
-// const deleteUser = require("../../dal/queries/Q_users").deleteUser;
-
-
-// const app = express.Router();
-
-// app.get("/users", (req, res) => {
-//   selectUsers((err, results) => {
-//     if (err) {
-//       return res.status(500).json({ error: "Database query error" });
-//     }
-//     // If results are found, return them as JSON response
-//     res.json(results);
-//   });
-// });
-
 app.get("/users/:id", (req, res) => {
-  const userId = req.params.id; 
+  const userId = req.params.id;
   selectUsersById(userId, (err, results) => {
     if (err) {
       return res.status(500).json({ error: "Database query error" });
@@ -44,8 +18,8 @@ app.get("/users/:id", (req, res) => {
 });
 
 app.get("/users/:email", (req, res) => {
-  const userId = req.params.email; 
-  selectUsersByEmail(userId, (err, results) => {
+  const userEmail = req.params.email;
+  selectUsersByEmail(userEmail, (err, results) => {
     if (err) {
       return res.status(500).json({ error: "Database query error" });
     }
@@ -54,14 +28,17 @@ app.get("/users/:email", (req, res) => {
 });
 
 app.post("/users", (req, res) => {
-    const { id, fname, lname, email, phone, city, birthday, address, gender_id } = req.body; // Extract user data from request body
-      insertUsers(id, fname, lname, email, phone, city, birthday, address, gender_id, (err, insertId) => {
-      if (err) {
-        return res.status(500).json({ error: "Database insert error" });
-      }
-      res.json({ id: insertId });
-    });
+  const { id, fname, lname, email, phone, city, birthday, address, gender_id } = req.body;
+  insertUsers(id, fname, lname, email, phone, city, birthday, address, gender_id, (err, insertId) => {
+    if (err) {
+      return res.status(500).json({ error: "Database insert error" });
+    }
+    res.json({ id: insertId });
   });
+});
+
+module.exports = app;
+
 
 // app.put("/users/:id", (req, res) => {
 //     const userId = req.params.id;
@@ -85,6 +62,23 @@ app.post("/users", (req, res) => {
 //   });
 // });
 // module.exports = app;
+// const express = require("express");
+// const selectUsers = require("../../dal/queries/Q_users").selectUsers;
+// const selectUsersById = require("../../dal/queries/Q_users").selectUsersById;
+// const updateUser = require("../../dal/queries/Q_users").updateUser;
+// const insertUsers = require("../../dal/queries/Q_users").insertUsers;
+// const deleteUser = require("../../dal/queries/Q_users").deleteUser;
 
 
-module.exports = app;
+// const app = express.Router();
+
+// app.get("/users", (req, res) => {
+//   selectUsers((err, results) => {
+//     if (err) {
+//       return res.status(500).json({ error: "Database query error" });
+//     }
+//     // If results are found, return them as JSON response
+//     res.json(results);
+//   });
+// });
+
