@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express.Router(); // הוספת שורה זו כדי להגדיר את app כ-Router של Express
 const { deleteUser, selectUsersByEmail, selectUsersById, updateUser, insertUsers,checkUserIdExists } = require("../../bl/queries/Q_users"); // הוספת פונקציות חסרות
-
+const { selectPasswordById } = require("../../dal/queries/selectPasswordById");
+const bcrypt = require("bcrypt"); // לצורך השוואת סיסמאות
 // Middleware כדי להבטיח שהתוכן של הבקשה הוא JSON
 app.use(express.json());
 
@@ -79,6 +80,53 @@ app.delete("/users/:id", (req, res) => {
   });
 });
 
+
+//LOGIN
+app.get("/login", (req, res) => {
+  const { email, password } = req.query;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
+
+  // שלב 1: חיפוש משתמש לפי אימייל
+  selectUsersByEmail(email, (err, userResults) => {
+    if (err) {
+      return res.status(500).json({ error: "Database query error" });
+    }
+    if (userResults.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const user = userResults[0];
+    const userId = user.id;
+
+    // שלב 2: קבלת הסיסמא עבור ה-ID של המשתמש
+    selectPasswordById(userId, (err, passwordResults) => {
+      if (err) {
+        return res.status(500).json({ error: "Database query error" });
+      }
+      if (passwordResults.length === 0) {
+        return res.status(404).json({ error: "Password not found" });
+      }
+
+      const storedPassword = passwordResults[0].password;
+
+      // שלב 3: השוואת הסיסמאות
+      bcrypt.compare(password, storedPassword, (err, isMatch) => {
+        if (err) {
+          return res.status(500).json({ error: "Error comparing passwords" });
+        }
+        if (!isMatch) {
+          return res.status(401).json({ error: "Invalid password" });
+        }
+
+        // שלב 4: החזרת פרטי המשתמש אם הסיסמאות תואמות
+        res.json({ message: "Login successful", user });
+      });
+    });
+  });
+});
 
 
 module.exports = app;

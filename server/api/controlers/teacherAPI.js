@@ -38,8 +38,8 @@ app.get("/teachers/:id", (req, res) => {
 
 // POST new teacher
 app.post("/teachers", (req, res) => {
-  const { id, resume, specialization, subject } = req.body;
-  insertTeacher(id, resume, specialization, subject, (err, insertId) => {
+  const { id, resume, specialization} = req.body;
+  insertTeacher(id, resume, specialization, (err, insertId) => {
     if (err) {
       return res.status(500).json({ error: "Database insert error" });
     }

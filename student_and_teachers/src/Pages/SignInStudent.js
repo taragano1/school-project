@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import "./SignInStudent.css";
 import "../CRUD";
 import { Add } from "../CRUD";
+
 export default function SignInStudent() {
-const navigate = useNavigate();  
+  const navigate = useNavigate();  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -36,8 +37,15 @@ const navigate = useNavigate();
       זכר: 1,
       נקבה: 2,
     };
-    
     const genderId = genderMap[formData.gender];
+  
+    // Convert studyNeed to number
+    const studyNeedMap = {
+      יסודי: 0,
+      תיכון: 1,
+      אקדמאי: 2,
+    };
+    const studyNeedId = studyNeedMap[formData.studyNeed];
   
     // Extract the necessary fields for the USER table
     const userPayload = {
@@ -69,7 +77,7 @@ const navigate = useNavigate();
         return Add("/students", {
           id: formData.id,
           clas: formData.class,
-          specialization_id: formData.studyNeed,
+          specialization_id: studyNeedId, // Use the mapped study need ID
         });
       })
       .then(() => {
@@ -78,9 +86,6 @@ const navigate = useNavigate();
       })
       .catch((error) => console.error("Error:", error));
   };
-  
-  
-
 
   return (
     <div>
@@ -123,7 +128,6 @@ const navigate = useNavigate();
             <option value="נקבה"> נקבה</option>
           </select>
         </div>
-        
         <div>
           <label>טלפון:</label>
           <input
@@ -170,7 +174,7 @@ const navigate = useNavigate();
           />
         </div>
         <div>
-          <label>סיסמא::</label>
+          <label>סיסמא:</label>
           <input
             type="text"
             name="password"
@@ -204,8 +208,8 @@ const navigate = useNavigate();
             onChange={handleChange}
           >
             <option value="יסודי">יסודי</option>
-            <option value=" אקדמאי"> אקדמאי</option>
-            <option value=" תיכון"> תיכון</option>
+            <option value="תיכון">תיכון</option>
+            <option value="אקדמאי">אקדמאי</option>
           </select>
         </div>
         <button type="submit">הרשמה</button>
@@ -213,3 +217,4 @@ const navigate = useNavigate();
     </div>
   );
 }
+

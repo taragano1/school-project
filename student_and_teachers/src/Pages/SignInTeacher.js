@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function SignInTeacher() {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -17,57 +16,58 @@ export default function SignInTeacher() {
     city: "",
     address: "",
     studyNeed: "",
-    isSpecialEducation: false,
-    educationLevel: "",
     password: "",
-    resume: "", // נוסיף שדה חדש לרזומה
+    resume: "",
   });
 
   const [files, setFiles] = useState([]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
     setFormData({
       ...formData,
-      [name]: newValue
+      [name]: type === "checkbox" ? checked : value,
     });
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    const fileURLs = selectedFiles.map((file) => {
+      return new Promise((resolve) => {
+        const url = URL.createObjectURL(file); // יצירת URL לקובץ
+        resolve({ name: file.name, url });
+      });
+    });
+
+    Promise.all(fileURLs)
+      .then((results) => setFiles((prevFiles) => [...prevFiles, ...results]))
+      .catch((error) => console.error("Error reading files:", error));
   };
 
   const handleFileDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
-
-    const droppedFiles = Array.from(e.dataTransfer.files);
-
-    const fileReaders = droppedFiles.map(file => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.onerror = () => reject(reader.error);
-        reader.readAsDataURL(file);
-      });
-    });
-
-    Promise.all(fileReaders)
-      .then(results => {
-        setFiles(prevFiles => [...prevFiles, ...results]); // הוסף קבצים למערך הקיים
-      })
-      .catch(error => console.error("Error reading files:", error));
+    handleFileChange({ target: { files: e.dataTransfer.files } });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Convert gender to number
+    // המרה למספר עבור מגדר
     const genderMap = {
       זכר: 1,
       נקבה: 2,
     };
-
     const genderId = genderMap[formData.gender];
 
-    // Extract the necessary fields for the USER table
+    // המרה למספר עבור יכולת הוראה
+    const studyNeedMap = {
+      יסודי: 0,
+      תיכון: 1,
+      אקדמאי: 2,
+    };
+    const studyNeedId = studyNeedMap[formData.studyNeed];
+
     const userPayload = {
       id: formData.id,
       fname: formData.firstName,
@@ -77,36 +77,35 @@ export default function SignInTeacher() {
       city: formData.city,
       birthday: formData.birthDate,
       address: formData.address,
-      gender_id: genderId, // Use the mapped gender ID
+      gender_id: genderId,
     };
 
-    // Save user data locally (optional)
+    // שמירת נתוני המשתמש המקומיים (אופציונלי)
     localStorage.setItem("LSCurrentUser", JSON.stringify(formData));
 
-    // Add the user to the 'users' table
     Add("/users", userPayload)
+      .then(() => Add("/passwords", { userId: formData.id, password: formData.password }))
+      .then(() => Add("/teachers", {
+        id: formData.id,
+        resume: formData.resume,
+        specialization_id: studyNeedId,
+        subject: 0, // ערך ברירת מחדל
+        isSpecialEducation: formData.isSpecialEducation,
+        educationLevel: formData.educationLevel,
+      }))
       .then(() => {
-        // Add the password to the 'passwords' table
-        return Add("/passwords", {
-          userId: formData.id,
-          password: formData.password,
+        // אחרי הוספת פרטי המשתמש והמורה, הוסף כל קובץ לטבלה teacher_doc
+        const filePromises = files.map((file) => {
+          const document = {
+            userId: formData.id,
+            document: file.url,
+          };
+          return Add("/teacher_doc", document);
         });
+
+        return Promise.all(filePromises);
       })
-      .then(() => {
-        // Add the teacher to the 'teachers' table
-        return Add("/teachers", {
-          id: formData.id,
-          resume: formData.resume,
-          specialization_id: formData.studyNeed,
-          subject: 0, // Set subject to a default value or based on form data if available
-          isSpecialEducation: formData.isSpecialEducation,
-          educationLevel: formData.educationLevel
-        });
-      })
-      .then(() => {
-        // Navigate to the teacher main page
-        navigate(`/teacher/main/${formData.id}`);
-      })
+      .then(() => navigate(`/teacher/main/${formData.id}`))
       .catch((error) => console.error("Error:", error));
   };
 
@@ -114,6 +113,7 @@ export default function SignInTeacher() {
     <div>
       <h2>הרשמת מורה</h2>
       <form onSubmit={handleSubmit}>
+        {/* שדות הטופס */}
         <div>
           <label>שם פרטי:</label>
           <input
@@ -163,7 +163,7 @@ export default function SignInTeacher() {
         <div>
           <label>תאריך לידה:</label>
           <input
-            type="text"
+            type="date"
             name="birthDate"
             value={formData.birthDate}
             onChange={handleChange}
@@ -172,7 +172,7 @@ export default function SignInTeacher() {
         <div>
           <label>אימייל:</label>
           <input
-            type="text"
+            type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
@@ -199,29 +199,14 @@ export default function SignInTeacher() {
         <div>
           <label>סיסמא:</label>
           <input
-            type="text"
+            type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
           />
         </div>
         <div>
-          <label>רמת ההשכלה:</label>
-          <select
-            name="educationLevel"
-            value={formData.educationLevel}
-            onChange={handleChange}
-          >
-            <option value="ללא">ללא</option>
-            <option value="תואר">תואר</option>
-            <option value="תעודה">תעודה</option>
-          </select>
-        </div>
-        <div>
-          <button
-            type="button"
-            onClick={() => document.getElementById('fileInput').click()}
-          >
+          <button type="button" onClick={() => document.getElementById('fileInput').click()}>
             להוספת מסמך
           </button>
           <input
@@ -229,23 +214,7 @@ export default function SignInTeacher() {
             type="file"
             multiple
             style={{ display: 'none' }}
-            onChange={(e) => {
-              const selectedFiles = Array.from(e.target.files);
-              const fileReaders = selectedFiles.map(file => {
-                return new Promise((resolve, reject) => {
-                  const reader = new FileReader();
-                  reader.onloadend = () => resolve(reader.result);
-                  reader.onerror = () => reject(reader.error);
-                  reader.readAsDataURL(file);
-                });
-              });
-
-              Promise.all(fileReaders)
-                .then(results => {
-                  setFiles(prevFiles => [...prevFiles, ...results]); // הוסף קבצים למערך הקיים
-                })
-                .catch(error => console.error("Error reading files:", error));
-            }}
+            onChange={handleFileChange}
           />
           <div
             style={{
@@ -254,12 +223,23 @@ export default function SignInTeacher() {
               padding: "20px",
               marginTop: "10px",
               cursor: "pointer",
-              textAlign: "center"
+              textAlign: "center",
             }}
             onDrop={handleFileDrop}
-            onDragOver={(e) => e.preventDefault()} // מנע את ברירת המחדל
+            onDragOver={(e) => e.preventDefault()}
           >
             גרור ושחרר קבצים לכאן
+            <div style={{ marginTop: "20px" }}>
+              <ul style={{ listStyleType: "none", padding: 0, margin: 0 }} >
+                {files.map((file, index) => (
+                  <li key={index}>
+                    <a href={file.url} target="_blank" rel="noopener noreferrer">
+                      {file.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
         <div>
@@ -272,41 +252,14 @@ export default function SignInTeacher() {
         </div>
         <div>
           <label>יכולות הוראה:</label>
-          <select
-            name="studyNeed"
-            value={formData.studyNeed}
-            onChange={handleChange}
-          >
+          <select name="studyNeed" value={formData.studyNeed} onChange={handleChange}>
             <option value="יסודי">יסודי</option>
-            <option value="אקדמאי">אקדמאי</option>
             <option value="תיכון">תיכון</option>
+            <option value="אקדמאי">אקדמאי</option>
           </select>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              name="isSpecialEducation"
-              checked={formData.isSpecialEducation}
-              onChange={handleChange}
-            />
-            מתמחה בחינוך מיוחד
-          </label>
         </div>
         <button type="submit">הרשמה</button>
       </form>
-      <div>
-        <h3>קבצים שנבחרו:</h3>
-        <ul>
-          {files.map((file, index) => (
-            <li key={index}>
-              <a href={file.url} target="_blank" rel="noopener noreferrer">
-                קובץ {index + 1}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
   );
 }
