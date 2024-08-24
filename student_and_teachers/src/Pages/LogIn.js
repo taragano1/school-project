@@ -34,14 +34,14 @@ export default function LogIn() {
 
           if (studentResponse.error) {
             // אם גם לא נמצא תלמיד, ננווט לדף הראשי של מנהל
-            navigate("/admin/dashboard");
+            navigate(`/manager/main/${response.user.id}`);
           } else {
             // אם המשתמש הוא תלמיד, ננווט לדף הראשי של התלמיד
-            navigate("/student/dashboard");
+            navigate(`/student/main/${response.user.id}`);
           }
         } else {
           // אם המשתמש הוא מורה, ננווט לדף הראשי של המורה
-          navigate("/teacher/dashboard");
+          navigate(`/teacher/main/${response.user.id}`);
         }
       }
     } catch (error) {

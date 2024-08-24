@@ -29,6 +29,7 @@ function App() {
         {/* {isAuthenticated && ( */}
           <>
             <Route path="teacher/main" element={<MainScreenTeacher />} />
+            <Route path="teacher/main/:id" element={<MainScreenTeacher />} />
             <Route path="teacher/history" element={<History />} />
             <Route path="teacher/specialization" element={<Specialization />} />
             <Route path="teacher/schedule" element={<TeacherSchedule />} />
@@ -38,6 +39,7 @@ function App() {
             <Route path="student/history" element={<History />} />
             <Route path="student/schedule" element={<StudentSchedule />} />
             <Route path="manager/main" element={<MainScreenManager />} />
+            <Route path="manager/main/:id" element={<MainScreenManager />} />
             <Route path="manager/all-feedbacks" element={<AllFeedBacks />} />
           </>
         {/* )} */}
