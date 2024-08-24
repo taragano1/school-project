@@ -30,61 +30,62 @@ export default function SignInStudent() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
   
-    // Convert gender to number
-    const genderMap = {
-      זכר: 1,
-      נקבה: 2,
-    };
-    const genderId = genderMap[formData.gender];
+    // // Convert gender to number
+    // const genderMap = {
+    //   זכר: 1,
+    //   נקבה: 2,
+    // };
+    // const genderId = genderMap[formData.gender];
   
-    // Convert studyNeed to number
-    const studyNeedMap = {
-      יסודי: 0,
-      תיכון: 1,
-      אקדמאי: 2,
-    };
-    const studyNeedId = studyNeedMap[formData.studyNeed];
+    // // Convert studyNeed to number
+    // const studyNeedMap = {
+    //   יסודי: 0,
+    //   תיכון: 1,
+    //   אקדמאי: 2,
+    // };
+    // const studyNeedId = studyNeedMap[formData.studyNeed];
   
-    // Extract the necessary fields for the USER table
-    const userPayload = {
-      id: formData.id,
-      fname: formData.firstName,
-      lname: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      city: formData.city,
-      birthday: formData.birthDate,
-      address: formData.address,
-      gender_id: genderId, // Use the mapped gender ID
-    };
+    // // Extract the necessary fields for the USER table
+    // const userPayload = {
+    //   id: formData.id,
+    //   fname: formData.firstName,
+    //   lname: formData.lastName,
+    //   email: formData.email,
+    //   phone: formData.phone,
+    //   city: formData.city,
+    //   birthday: formData.birthDate,
+    //   address: formData.address,
+    //   gender_id: genderId, // Use the mapped gender ID
+    // };
   
-    // Save user data locally (optional)
-    localStorage.setItem("LSCurrentUser", JSON.stringify(formData));
+    // // Save user data locally (optional)
+    // localStorage.setItem("LSCurrentUser", JSON.stringify(formData));
   
-    // Add the user to the 'users' table
-    Add("/users", userPayload)
-      .then(() => {
-        // Add the password to the 'passwords' table
-        return Add("/passwords", {
-          userId: formData.id,
-          password: formData.password,
-        });
-      })
-      .then(() => {
-        // Add the student to the 'students' table
-        return Add("/students", {
-          id: formData.id,
-          clas: formData.class,
-          specialization_id: studyNeedId, // Use the mapped study need ID
-        });
-      })
-      .then(() => {
-        // Navigate to the student main page
-        navigate(`/student/main/${formData.id}`);
-      })
-      .catch((error) => console.error("Error:", error));
+    // // Add the user to the 'users' table
+    // Add("/users", userPayload)
+    //   .then(() => {
+    //     // Add the password to the 'passwords' table
+    //     return Add("/passwords", {
+    //       userId: formData.id,
+    //       password: formData.password,
+    //     });
+    //   })
+    //   .then(() => {
+    //     // Add the student to the 'students' table
+    //     return Add("/students", {
+    //       id: formData.id,
+    //       clas: formData.class,
+    //       specialization_id: studyNeedId, // Use the mapped study need ID
+    //     });
+    //   })
+    //   .then(() => {
+    //     // Navigate to the student main page
+    //     navigate(`/student/main/${formData.id}`);
+    //   })
+    //   .catch((error) => console.error("Error:", error));
+    navigate(`/student/main/${formData.id}`);
   };
 
   return (

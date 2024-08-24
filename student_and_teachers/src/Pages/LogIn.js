@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Read } from "../CRUD"; // נשתמש בפונקציה זו לשליחת הבקשה
+import { Read } from "../CRUD";
 
 export default function LogIn() {
   const [email, setEmail] = useState("");
@@ -12,35 +12,50 @@ export default function LogIn() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Validate inputs
     if (!email || !password) {
-      setError("Please fill in all fields");
+      setError("אנא מלא את כל השדות");
       return;
     }
 
     try {
-      // שליחת הבקשה לשרת
       const response = await Read(`/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
 
       if (response.error) {
         setError(response.error);
       } else {
         setUser(response.user);
-        // אם ההתחברות הצליחה, נניח שנרצה לנתב לדף אחר
-        navigate("/dashboard"); // שנה לכתובת המתאימה
+
+        // בדיקה אם המשתמש הוא מורה
+        const teacherResponse = await Read(`/teachers/${response.user.id}`);
+
+        if (teacherResponse.error) {
+          // אם המשתמש אינו מורה, נבדוק אם הוא תלמיד
+          const studentResponse = await Read(`/students/${response.user.id}`);
+
+          if (studentResponse.error) {
+            // אם גם לא נמצא תלמיד, ננווט לדף הראשי של מנהל
+            navigate("/admin/dashboard");
+          } else {
+            // אם המשתמש הוא תלמיד, ננווט לדף הראשי של התלמיד
+            navigate("/student/dashboard");
+          }
+        } else {
+          // אם המשתמש הוא מורה, ננווט לדף הראשי של המורה
+          navigate("/teacher/dashboard");
+        }
       }
     } catch (error) {
-      setError("An error occurred while trying to log in");
+      setError("אירעה שגיאה במהלך ניסיון ההתחברות");
     }
   };
 
   return (
     <div>
-      <h1>Login</h1>
+      <h1>התחברות</h1>
       <form onSubmit={handleLogin}>
         <div>
           <label>
-            Email:
+            אימייל:
             <input
               type="email"
               value={email}
@@ -50,7 +65,7 @@ export default function LogIn() {
         </div>
         <div>
           <label>
-            Password:
+            סיסמה:
             <input
               type="password"
               value={password}
@@ -60,14 +75,13 @@ export default function LogIn() {
         </div>
         {error && <div style={{ color: "red" }}>{error}</div>}
         <div>
-          <button type="submit">Log In</button>
+          <button type="submit">התחבר</button>
         </div>
       </form>
       <div>
-        <Link to="/teacher/signIn">Register as Teacher</Link>
-        <Link to="/student/signIn">Register as Student</Link>
+        <Link to="/teacher/signIn">הרשם כמורה</Link>
+        <Link to="/student/signIn">הרשם כתלמיד</Link>
       </div>
     </div>
   );
 }
-
