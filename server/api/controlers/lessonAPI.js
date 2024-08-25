@@ -22,14 +22,14 @@ app.get("/lessons", (req, res) => {
   });
 });
 
-app.get("/lesson/:teacher", (req, res) => {
-    const lessonId = req.params.id_teacher;
-    selectLessonByTeacher(lessonId, (err, results) => {
-      if (err) {
-        return res.status(500).json({ error: "Database query error" });
-      }
-      res.json(results);
-    });
+app.get("/lessons/teacher/:id", (req, res) => {
+  const teacherId = req.params.id;
+  selectLessonByTeacher(teacherId, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database query error" });
+    }
+    res.json(results);
+  });
 });
 
 app.post("/lesson", (req, res) => {
