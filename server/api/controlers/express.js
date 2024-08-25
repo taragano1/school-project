@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
 const port = 5000;
 
@@ -10,8 +11,9 @@ const lessonAPI = require("../controlers/lessonAPI");
 const genderAPI = require("../controlers/genderAPI");
 //const specializationAPI = require("../controlers/specializationAPI");
 const teacher_docAPI = require("../controlers/teacher_docAPI");
+
 app.use(express.json());
-// app.use(cors());
+app.use(cors());
 
 // Use the routes with appropriate base paths
 app.use('/api', usersAPI);
@@ -33,3 +35,4 @@ app.listen(port, () => {
 });
 
 module.exports = app;
+
