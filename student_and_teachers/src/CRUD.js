@@ -23,6 +23,7 @@ export function Add(serverAddress, Obj) {
     body: JSON.stringify(Obj),
   })
     .then((response) => {
+      console.log(response+" ADD")
       if (response.ok) {
         console.log("Password added successfully");
       }

@@ -6,7 +6,7 @@ const {
   insertPassword, // פונקציה להוספת סיסמאות
 } = require("../../bl/queries/Q_passwords");
 const app = express.Router();
-
+const saltRounds = 10; // קביעת מספר סיבובי ההצפנה
 
 // GET schedule by ID
 app.get("/password/:id", (req, res) => {
@@ -24,8 +24,10 @@ app.get("/password/:id", (req, res) => {
 
   // POST - הוספת סיסמא חדשה
 app.post("/passwords", (req, res) => {
-  const { userId, password } = req.body;
-  insertPassword(userId, password, (err, results) => {
+  const { userId ,username, password } = req.body;
+  const hashedPassword = bcrypt.hash(password, saltRounds);
+  console.log("api-hash"+hashedPassword);
+  insertPassword(userId,username, hashedPassword, (err, results) => {
     if (err) {
       return res.status(500).json({ error: "Database insertion error" });
     }

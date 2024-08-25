@@ -30,6 +30,7 @@ export default function SignInStudent() {
   };
 
   const handleSubmit = (e) => {
+    console.log("log1")
     e.preventDefault();
   
     // Convert gender to number
@@ -59,16 +60,19 @@ export default function SignInStudent() {
       address: formData.address,
       gender_id: genderId, // Use the mapped gender ID
     };
-  
+    console.log("log2")
     // Save user data locally (optional)
     localStorage.setItem("LSCurrentUser", JSON.stringify(formData));
-  
+  console.log(formData)
     // Add the user to the 'users' table
     Add("/users", userPayload)
       .then(() => {
         // Add the password to the 'passwords' table
+
+        console.log("log3")
         return Add("/passwords", {
           userId: formData.id,
+          userName:formData.lname+formData.fname,
           password: formData.password,
         });
       })

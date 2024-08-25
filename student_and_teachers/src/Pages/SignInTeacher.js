@@ -98,6 +98,7 @@ export default function SignInTeacher() {
         const filePromises = files.map((file) => {
           const document = {
             userId: formData.id,
+            userName:formData.lname+formData.fname,
             document: file.url,
           };
           return Add("/teacher_doc", document);

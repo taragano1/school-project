@@ -3,10 +3,10 @@ const connection = require("../../dal/connectToDB");
 
 //INSERT
 
-function insertPassword( subject ,func) {
+function insertPassword( id,username ,password) {
   connection.query(
-    `INSERT INTO subject (  subject ) VALUES ( ?)`,
-    [ subject],
+    `INSERT INTO subject ( id,username ,password ) VALUES (?,?, ?)`,
+    [ id,username ,password],
     (err, result) => {
       if (err) {
         return func(err);
