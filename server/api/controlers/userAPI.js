@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express.Router(); // הוספת שורה זו כדי להגדיר את app כ-Router של Express
 const { deleteUser, selectUsersByEmail, selectUsersById, updateUser, insertUsers,checkUserIdExists } = require("../../bl/queries/Q_users"); // הוספת פונקציות חסרות
-const { selectPasswordById } = require("../../dal/queries/selectPasswordById");
+const { selectPasswordById } = require("../../bl/queries/Q_passwords");
 const bcrypt = require("bcrypt"); // לצורך השוואת סיסמאות
 // Middleware כדי להבטיח שהתוכן של הבקשה הוא JSON
 app.use(express.json());

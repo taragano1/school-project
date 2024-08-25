@@ -2,7 +2,7 @@ const express = require("express");
 
 const {
     insertDocument, // פונקציה להוספת סיסמאות
-} = require("../../dal/queries/insertDocument");
+} = require("../../bl/queries/Q_teacher_doc");
 const app = express.Router();
 
 

@@ -3,7 +3,7 @@ const { selectGenderByName, selectAllGenders, insertGender } = require("../../bl
 const app = express.Router();
 
 app.use(express.json());
-
+app.use(require('cors')())
 // GET request לקבלת גנדר לפי שם
 app.get('/genders/names', (req, res) => {
   console.log('hi');
