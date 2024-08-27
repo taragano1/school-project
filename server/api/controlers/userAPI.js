@@ -32,7 +32,7 @@ app.get("/users/email/:email", (req, res) => {
 app.post("/users", (req, res) => {
   console.log('Request body:', req.body);
   console.log("postsignin-userapi")
-  const { id, fname, lname, email, phone, city, birthday, address, gender_id } = req.body;
+  const { id, fname, lname, email, phone, city, birthday, address, gender_id,typeOfUser,status } = req.body;
 
   // בדיקה אם כל הנתונים הנדרשים קיימים
   if (!id || !fname || !lname || !email || !phone || !city || !birthday || !address || !gender_id) {
@@ -49,7 +49,7 @@ app.post("/users", (req, res) => {
     }
 
     // הכנסת המשתמש החדש אם ה-ID לא קיים
-    insertUsers(id, fname, lname, email, phone, city, birthday, address, gender_id, (err, insertId) => {
+    insertUsers(id, fname, lname, email, phone, city, birthday, address, gender_id,typeOfUser,status, (err, insertId) => {
       if (err) {
         return res.status(500).json({ error: "Database insert error" });
       }

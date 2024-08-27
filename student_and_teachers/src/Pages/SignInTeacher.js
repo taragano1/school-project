@@ -78,6 +78,8 @@ export default function SignInTeacher() {
       birthday: formData.birthDate,
       address: formData.address,
       gender_id: genderId,
+      typeOfUser:2, 
+      status:true
     };
 
     // שמירת נתוני המשתמש המקומיים (אופציונלי)
