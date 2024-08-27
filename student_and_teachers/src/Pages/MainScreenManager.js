@@ -3,11 +3,13 @@ import './MainScreenManager.css';
 import { useParams } from "react-router-dom";
 import { Read } from "../CRUD";
 import Teacher from "../components/Teacher"; // ייבוא הקומפוננטה Teacher
+import { useNavigate } from "react-router-dom";
 
 const MainScreenManager = () => {
     const { id } = useParams();
     let myUser = Read(`/users/${id}`);
     const [teachers, setTeachers] = useState([]);
+    const navigate = useNavigate();  
 
     useEffect(() => {
         const getTeachers = () => {
@@ -16,7 +18,7 @@ const MainScreenManager = () => {
             });
         };
         getTeachers();
-    }, []); // שינוי כאן להסרת teachers מהתלות כדי למנוע קריאות אינסופיות
+    }, []); 
 
     const handleRemove = (teacherId) => {
         // הוסיפו כאן את הלוגיקה למחיקת מורה
@@ -24,7 +26,7 @@ const MainScreenManager = () => {
     };
 
     const handleViewFeedback = (teacherId) => {
-        // הוסיפו כאן את הלוגיקה לצפייה בפידבקים
+        
         console.log("Viewing feedback for teacher with ID:", teacherId);
         navigate(`/manager/all-feedbacks/${id}`);
     };

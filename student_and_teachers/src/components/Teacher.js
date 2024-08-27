@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { Read } from "../CRUD";
 const Teacher = ({ teacher, onRemove, onViewFeedback }) => {
     const [lessons, setLessons] = useState([]);
     const [averageRate, setAverageRate] = useState(0);
