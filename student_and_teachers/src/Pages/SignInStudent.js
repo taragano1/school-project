@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignInStudent.css";
-import "../CRUD";
 import { Add } from "../CRUD";
 
 export default function SignInStudent() {
@@ -30,6 +29,7 @@ export default function SignInStudent() {
   };
 
   const handleSubmit = (e) => {
+    console.log("log1")
     e.preventDefault();
   
     // Convert gender to number
@@ -59,16 +59,17 @@ export default function SignInStudent() {
       address: formData.address,
       gender_id: genderId, // Use the mapped gender ID
     };
-  
+    console.log("log2")
     // Save user data locally (optional)
     localStorage.setItem("LSCurrentUser", JSON.stringify(formData));
-  
+  console.log(formData)
     // Add the user to the 'users' table
     Add("/api/users", userPayload)
       .then(() => {
         // Add the password to the 'passwords' table
         return Add("/api/passwords", {
           userId: formData.id,
+          userName:formData.lname+formData.fname,
           password: formData.password,
         });
       })

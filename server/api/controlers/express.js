@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require('cors');
 const app = express();
-const port = 5000;
+const port = 8000;
 
 // Import the routes
 const usersAPI = require("../controlers/userAPI");
@@ -35,6 +35,8 @@ app.use('/api', genderAPI);
 //app.use('/api', specializationAPI);
 app.use('/api', teacher_docAPI);
 app.use('/api', passwordAPI);
+
+
 
 app.get("/", (req, res) => {
     return res.status(200).send("hello momo");

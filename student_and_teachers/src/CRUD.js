@@ -1,4 +1,4 @@
-let serverPath = "http://localhost:5000";
+let serverPath = "http://localhost:8000";
 
 
 export function Read(query) {
@@ -23,6 +23,7 @@ export function Add(serverAddress, Obj) {
     body: JSON.stringify(Obj),
   })
     .then((response) => {
+      console.log(response+" ADD")
       if (response.ok) {
         console.log(serverAddress+" added successfully");
       }

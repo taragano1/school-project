@@ -30,6 +30,7 @@ app.get("/users/email/:email", (req, res) => {
 
 // POST request להוספת משתמש חדש
 app.post("/users", (req, res) => {
+  console.log("postsignin-userapi")
   const { id, fname, lname, email, phone, city, birthday, address, gender_id } = req.body;
 
   // בדיקה אם כל הנתונים הנדרשים קיימים
