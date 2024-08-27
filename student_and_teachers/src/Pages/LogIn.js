@@ -6,7 +6,6 @@ export default function LogIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -23,25 +22,20 @@ export default function LogIn() {
       if (response.error) {
         setError(response.error);
       } else {
-        setUser(response.user);
+        const user = response.user;
 
-        // בדיקה אם המשתמש הוא מורה
-        const teacherResponse = await Read(`/teachers/${response.user.id}`);
-
-        if (teacherResponse.error) {
-          // אם המשתמש אינו מורה, נבדוק אם הוא תלמיד
-          const studentResponse = await Read(`/students/${response.user.id}`);
-
-          if (studentResponse.error) {
-            // אם גם לא נמצא תלמיד, ננווט לדף הראשי של מנהל
-            navigate(`/manager/main/${response.user.id}`);
+        // בדיקה אם הסטטוס של המשתמש הוא TRUE
+        if (user.status === true) {
+          if (user.typeOfUser === 1) {
+            navigate(`/manager/main/${user.id}`);
+          } else if (user.typeOfUser === 2) {
+            navigate(`/teacher/main/${user.id}`);
           } else {
-            // אם המשתמש הוא תלמיד, ננווט לדף הראשי של התלמיד
-            navigate(`/student/main/${response.user.id}`);
+            navigate(`/student/main/${user.id}`);
           }
         } else {
-          // אם המשתמש הוא מורה, ננווט לדף הראשי של המורה
-          navigate(`/teacher/main/${response.user.id}`);
+          // אם הסטטוס הוא FALSE, הצגת הודעת שגיאה
+          setError("החשבון שלך אינו פעיל. אנא פנה למנהל המערכת.");
         }
       }
     } catch (error) {
@@ -85,3 +79,5 @@ export default function LogIn() {
     </div>
   );
 }
+
+

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import './MainScreenManager.css';
 import { useParams } from "react-router-dom";
-import { Read } from "../CRUD";
-import Teacher from "../components/Teacher"; // ייבוא הקומפוננטה Teacher
+import { Read, Update } from "../CRUD";
+import Teacher from "../components/Teacher";
 import { useNavigate } from "react-router-dom";
 
 const MainScreenManager = () => {
     const { id } = useParams();
-    let myUser = Read(`/users/${id}`);
     const [teachers, setTeachers] = useState([]);
     const navigate = useNavigate();  
 
@@ -20,13 +19,29 @@ const MainScreenManager = () => {
         getTeachers();
     }, []); 
 
-    const handleRemove = (teacherId) => {
-        // הוסיפו כאן את הלוגיקה למחיקת מורה
-        console.log("Removing teacher with ID:", teacherId);
+    const getTeachers = () => {
+        Read(`/teachers`).then((t) => {
+            setTeachers(t);
+        });
+    };
+
+    const handleRemove = async (teacherId) => {
+        try {
+            // הבאת ה-USER מהשרת ושינוי הסטטוס שלו ל-FALSE
+            const user = await Read(`/users/${teacherId}`);
+            if (user) {
+                user.status = false;
+                await Update(`/users/${teacherId}`, user);
+
+                // קריאה מחודשת לפונקציה getTeachers לעדכון הרשימה
+                getTeachers();
+            }
+        } catch (error) {
+            console.error("Error removing teacher:", error);
+        }
     };
 
     const handleViewFeedback = (teacherId) => {
-        
         console.log("Viewing feedback for teacher with ID:", teacherId);
         navigate(`/manager/all-feedbacks/${id}`);
     };
@@ -57,5 +72,6 @@ const MainScreenManager = () => {
 };
 
 export default MainScreenManager;
+
 
 

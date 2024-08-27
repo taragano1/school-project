@@ -57,7 +57,9 @@ export default function SignInStudent() {
       city: formData.city,
       birthday: formData.birthDate,
       address: formData.address,
-      gender_id: genderId, // Use the mapped gender ID
+      gender_id: genderId,
+      typeOfUser:3, 
+      status:true
     };
     console.log("log2")
     // Save user data locally (optional)
