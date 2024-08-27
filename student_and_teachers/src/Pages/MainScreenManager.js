@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import './MainScreenManager.css';
 import { useParams } from "react-router-dom";
 import { Read } from "../CRUD";
-import Teacher from "./Components/Teacher"; // ייבוא הקומפוננטה Teacher
+import Teacher from "../components/Teacher"; // ייבוא הקומפוננטה Teacher
 
 const MainScreenManager = () => {
     const { id } = useParams();
-    let myUser=Read(`/users/${id}`)
+    let myUser = Read(`/users/${id}`);
     const [teachers, setTeachers] = useState([]);
 
     useEffect(() => {
@@ -26,14 +26,21 @@ const MainScreenManager = () => {
     const handleViewFeedback = (teacherId) => {
         // הוסיפו כאן את הלוגיקה לצפייה בפידבקים
         console.log("Viewing feedback for teacher with ID:", teacherId);
+        navigate(`/manager/all-feedbacks/${id}`);
+    };
+
+    const handleProfileClick = () => {
+        alert("כפתור זה אינו מאופשר כרגע.");
     };
 
     return (
         <div className="main-screen-manager-container">
-            <h1></h1>
-            <button className="profile-button">פרופיל מנהל</button>
+            <h1>מסך מנהל</h1>
+            <button className="profile-button" onClick={handleProfileClick}>
+                פרופיל מנהל
+            </button>
 
-            {/* <div className="teachers-list">
+            <div className="teachers-list">
                 {teachers.map((teacher) => (
                     <Teacher 
                         key={teacher.id} 
@@ -42,10 +49,11 @@ const MainScreenManager = () => {
                         onViewFeedback={handleViewFeedback} 
                     />
                 ))}
-            </div> */}
+            </div>
         </div>
     );
 };
 
 export default MainScreenManager;
+
 

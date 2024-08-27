@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignInStudent.css";
-import "../CRUD";
 import { Add } from "../CRUD";
 
 export default function SignInStudent() {

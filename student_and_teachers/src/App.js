@@ -40,7 +40,7 @@ function App() {
             <Route path="student/schedule" element={<StudentSchedule />} />
             <Route path="manager/main" element={<MainScreenManager />} />
             <Route path="manager/main/:id" element={<MainScreenManager />} />
-            <Route path="manager/all-feedbacks" element={<AllFeedBacks />} />
+            <Route path="manager/all-feedbacks/:id" element={<AllFeedBacks />} />
           </>
         {/* )} */}
       </Routes>

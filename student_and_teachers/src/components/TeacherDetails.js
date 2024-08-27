@@ -1,5 +1,5 @@
 import React from "react";
-import { Update, Delete } from "./CRUD";
+import { Update, Delete } from "../CRUD";
 
 export default function TeacherDetails({ teacher, onClose }) {
   const handleUpdate = () => {

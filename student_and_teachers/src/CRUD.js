@@ -1,4 +1,4 @@
-let serverPath = "http://localhost:5000";
+let serverPath = "http://localhost:8000";
 
 
 export function Read(query) {

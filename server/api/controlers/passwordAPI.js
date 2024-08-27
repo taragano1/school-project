@@ -24,10 +24,10 @@ app.get("/password/:id", (req, res) => {
 
   // POST - הוספת סיסמא חדשה
 app.post("/passwords", (req, res) => {
-  const { userId ,username, password } = req.body;
+  const { userId , password } = req.body;
   const hashedPassword = bcrypt.hash(password, saltRounds);
   console.log("api-hash"+hashedPassword);
-  insertPassword(userId,username, hashedPassword, (err, results) => {
+  insertPassword(userId, hashedPassword, (err, results) => {
     if (err) {
       return res.status(500).json({ error: "Database insertion error" });
     }

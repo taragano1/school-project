@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Read, Update, Delete } from "./CRUD";
+import { Read, Update, Delete } from "../CRUD";
 import TeacherDetails from "../components/TeacherDetails";
 import AddLessonPopup from "../components/AddLessonPopup";
 

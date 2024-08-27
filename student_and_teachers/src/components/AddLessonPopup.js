@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Read, Add } from "./CRUD";
+import { Read, Add } from "../CRUD";
 
 export default function AddLessonPopup({ show, onClose, onAddLesson }) {
   const [subjects, setSubjects] = useState([]);
