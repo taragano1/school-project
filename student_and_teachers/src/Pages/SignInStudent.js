@@ -62,15 +62,15 @@ export default function SignInStudent() {
     console.log("log2")
     // Save user data locally (optional)
     localStorage.setItem("LSCurrentUser", JSON.stringify(formData));
-  console.log(formData)
+  console.log(formData);
+  console.log(userPayload);
     // Add the user to the 'users' table
     Add("/api/users", userPayload)
       .then(() => {
         // Add the password to the 'passwords' table
         return Add("/api/passwords", {
           userId: formData.id,
-          userName:formData.lname+formData.fname,
-          password: formData.password,
+          password: formData.password
         });
       })
       .then(() => {
@@ -78,7 +78,7 @@ export default function SignInStudent() {
         return Add("/api/students", {
           id: formData.id,
           clas: formData.class,
-          specialization_id: studyNeedId, // Use the mapped study need ID
+          specialization_id: studyNeedId // Use the mapped study need ID
         });
       })
       .then(() => {

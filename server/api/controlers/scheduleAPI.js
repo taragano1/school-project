@@ -44,6 +44,27 @@ app.post("/schedules", (req, res) => {
   });
 });
 
+app.post('/api/schedule/:teacherId/add', async (req, res) => {
+  const { teacherId } = req.params;
+  const { schedule } = req.body;
+
+  try {
+      // הוספת הנתונים החדשים ל-Database
+      for (const slot of schedule) {
+          const { date, hour } = slot;
+          await db.query(
+              'INSERT INTO schedule (teacher_id, date, hour) VALUES (?, ?, ?)',
+              [teacherId, date, hour]
+          );
+      }
+      res.status(200).json({ message: 'Schedule added successfully' });
+  } catch (error) {
+      console.error('Error adding schedule:', error);
+      res.status(500).json({ message: 'Failed to add schedule' });
+  }
+});
+
+
 // PUT update schedule
 app.put("/schedules/:id", (req, res) => {
   const scheduleId = req.params.id;

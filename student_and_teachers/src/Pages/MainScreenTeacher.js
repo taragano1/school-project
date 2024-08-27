@@ -73,6 +73,7 @@ export default function TeacherPage({ teacherId }) {
           <h1>עמוד המורה - {teacher.fname} {teacher.lname}</h1>
           <button onClick={() => setShowDetails(true)}>הצג פרטי מורה</button>
           <button onClick={() => setShowAddLessonPopup(true)}>הוסף שיעור חדש</button>
+          <button onClick={() => navigate(`/TeacherSchedule/${teacherId}`)}>לקביעת מערכת לשבוע הבא</button>
 
           {/* טבלת שיעורים */}
           <table>

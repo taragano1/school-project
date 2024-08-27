@@ -1,5 +1,5 @@
 .container {
-    max-width: 800px;
+    max-width: 1000px; /* הגדל את רוחב הקונטיינר */
     margin: 20px auto;
     padding: 20px;
     background-color: #f9f9f9;
@@ -26,23 +26,24 @@ table {
 
 th, td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 10px; /* הגדל את ריווח בתאים */
     text-align: center;
+    min-width: 100px; /* הגדר רוחב מינימלי לתאים */
 }
 
 th {
     background-color: #f2f2f2;
+    font-weight: bold; /* הדגש את הטקסט בכותרות */
 }
 
-.lesson {
+td.lesson {
     background-color: #007bff;
     color: white;
-    padding: 8px;
     cursor: pointer;
     border-radius: 4px;
 }
 
-.lesson:hover {
+td.lesson:hover {
     background-color: #0056b3;
 }
 
@@ -59,4 +60,9 @@ th {
 
 .save-button:hover {
     background-color: #218838;
+}
+
+/* עיצוב לשורות שייצגו שעות לוח */
+.table-container tr {
+    cursor: pointer;
 }

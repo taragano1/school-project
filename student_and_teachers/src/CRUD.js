@@ -12,8 +12,10 @@ export function Read(query) {
 
 export function Add(serverAddress, Obj) {
   let fullpath = serverPath + serverAddress;
-
-  console.log("AddPassword: ", fullpath);
+  
+  console.log( fullpath);
+  console.log( Obj);
+  console.log("Sending object:", JSON.stringify(Obj));
 
   return fetch(fullpath, {
     method: "POST",
@@ -23,16 +25,24 @@ export function Add(serverAddress, Obj) {
     body: JSON.stringify(Obj),
   })
     .then((response) => {
-      console.log(response+" ADD")
-      if (response.ok) {
-        console.log(serverAddress+" added successfully");
+      console.log("Response received:", response);
+      
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
       }
+      
       return response.json();
     })
     .then((data) => {
+      console.log(serverAddress + " added successfully:", data);
       return data;
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+      throw error; // ניתן לזרוק את השגיאה כדי לטפל בה במקום אחר אם צריך
     });
 }
+
 
 
 export function Update(query, updatedData) {
