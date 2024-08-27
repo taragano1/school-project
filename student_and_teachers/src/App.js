@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AllFeedBacks from './Pages/AllFeedBacks';
-import Feedback from './Pages/Feedback';
+import Feedback from './Pages/Feedback'; // יבוא דף המשוב
 import History from './Pages/History';
 import LogIn from './Pages/LogIn';
 import MainScreenManager from './Pages/MainScreenManager';
@@ -35,7 +35,7 @@ function App() {
             <Route path="teacher/schedule" element={<TeacherSchedule />} />
             <Route path="student/main" element={<MainScreenStudent />} />
             <Route path="student/main/:id" element={<MainScreenStudent />} />
-            <Route path="student/add-feedback" element={<Feedback />} />
+            <Route path="student/add-feedback/:lessonId" element={<Feedback />} /> {/* הוספת הנתיב למשוב */}
             <Route path="student/history" element={<History />} />
             <Route path="student/schedule" element={<StudentSchedule />} />
             <Route path="manager/main" element={<MainScreenManager />} />

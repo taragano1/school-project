@@ -1,7 +1,7 @@
 const connection = require("../connectToDB");
 
 // Define the table schema with the password hashed and salted
-var sql = "CREATE TABLE  passwords (id VARCHAR(9) PRIMARY KEY, username VARCHAR(255), password_hash VARCHAR(255), FOREIGN KEY (id) REFERENCES users(id))";
+var sql = "CREATE TABLE  passwords (id VARCHAR(9) PRIMARY KEY, password_hash VARCHAR(255), FOREIGN KEY (id) REFERENCES users(id))";
 
 //var sql="DROP TABLE passwords"
 

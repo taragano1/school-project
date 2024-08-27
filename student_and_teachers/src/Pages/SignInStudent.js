@@ -34,8 +34,8 @@ export default function SignInStudent() {
   
     // Convert gender to number
     const genderMap = {
-      זכר: 1,
-      נקבה: 2,
+      זכר: 2,
+      נקבה: 1,
     };
     const genderId = genderMap[formData.gender];
   
@@ -64,17 +64,17 @@ export default function SignInStudent() {
     localStorage.setItem("LSCurrentUser", JSON.stringify(formData));
   
     // Add the user to the 'users' table
-    Add("/users", userPayload)
+    Add("/api/users", userPayload)
       .then(() => {
         // Add the password to the 'passwords' table
-        return Add("/passwords", {
+        return Add("/api/passwords", {
           userId: formData.id,
           password: formData.password,
         });
       })
       .then(() => {
         // Add the student to the 'students' table
-        return Add("/students", {
+        return Add("/api/students", {
           id: formData.id,
           clas: formData.class,
           specialization_id: studyNeedId, // Use the mapped study need ID
@@ -82,7 +82,7 @@ export default function SignInStudent() {
       })
       .then(() => {
         // Navigate to the student main page
-        navigate(`/student/main/${formData.id}`);
+        navigate(`/api/student/main/${formData.id}`);
       })
       .catch((error) => console.error("Error:", error));
 

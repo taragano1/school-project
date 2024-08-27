@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Read, Update, Delete } from "./CRUD";
+import { Read, Update, Delete } from "../CRUD";
 import TeacherDetails from "../components/TeacherDetails";
 import AddLessonPopup from "../components/AddLessonPopup";
+import { useNavigate } from 'react-router-dom';
 
 export default function TeacherPage({ teacherId }) {
   const [showDetails, setShowDetails] = useState(false);
   const [lessons, setLessons] = useState([]);
   const [showAddLessonPopup, setShowAddLessonPopup] = useState(false);
   const [teacher, setTeacher] = useState(null);
+  const navigate = useNavigate(); // ה-hook לניווט
 
   useEffect(() => {
     // פונקציה לשליפת פרטי המורה
@@ -50,8 +52,7 @@ export default function TeacherPage({ teacherId }) {
   };
 
   const handleFeedback = (lessonId) => {
-    // פונקציה לפתיחת חלון או פעולה להוספת משוב
-    console.log("Feedback for lesson ID:", lessonId);
+    navigate(`/feedback/${lessonId}`); // ניווט לדף המשוב
   };
 
   const handleUpdateLesson = (lessonId) => {

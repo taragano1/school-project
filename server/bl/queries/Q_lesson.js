@@ -61,6 +61,19 @@ function selectAllLessons(func) {
     );
   }
 
+  function updateFeedback(id, feedback, func) {
+    connection.query(
+      `UPDATE lesson SET feedback = ? WHERE id = ?`,
+      [feedback, id],
+      (err, result) => {
+        if (err) return func(err);
+        func(null, result.affectedRows);
+      }
+    );
+  }
+
+  
+
    //DELETE
    function deleteLesson( id, func) {
     connection.query(
@@ -110,6 +123,7 @@ function selectAllLessons(func) {
     selectLessonById,
     selectLessonByTeacher,
     updateLesson,
+    updateFeedback,
     deleteLesson,
     deleteLessonByTeacher,
     deleteLessonByStudent

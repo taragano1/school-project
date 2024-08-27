@@ -16,7 +16,7 @@ app.get('/genders/names', (req, res) => {
 });
 
 // GET request לקבלת כל הגנדרים
-app.get('/genders', (req, res) => {
+app.get('/genders/all', (req, res) => {
   selectAllGenders((err, results) => {
     if (err) {
       return res.status(500).json({ error: 'Database query error' });

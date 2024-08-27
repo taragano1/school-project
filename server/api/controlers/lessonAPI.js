@@ -58,6 +58,18 @@ app.post("/lesson", (req, res) => {
     });
   });
 
+  app.put("/lesson/:id/feedback", (req, res) => {
+    const lessonId = req.params.id;
+    const { feedback } = req.body;
+  
+    updateFeedback(lessonId, feedback, (err, affectedRows) => {
+      if (err) {
+        return res.status(500).json({ error: "Database update error" });
+      }
+      res.json({ affectedRows });
+    });
+  });
+
   app.delete("/lesson/:id", (req, res) => {
     const lessonId = req.params.id; // Extract lesson ID from URL parameter
   

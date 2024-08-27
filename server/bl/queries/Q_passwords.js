@@ -1,12 +1,12 @@
-const { query } = require("express");
+//const { query } = require("express");
 const connection = require("../../dal/connectToDB");
 
 //INSERT
 
-function insertPassword( subject ,func) {
+function insertPassword(id, password_hash, func) {
   connection.query(
-    `INSERT INTO subject (  subject ) VALUES ( ?)`,
-    [ subject],
+    `INSERT INTO passwords (id, password_hash) VALUES (?, ?)`,
+    [id, password_hash],
     (err, result) => {
       if (err) {
         return func(err);
@@ -19,7 +19,7 @@ function insertPassword( subject ,func) {
 //SELECT
 
 function selectPassword(func) {
-    let query = `SELECT * FROM subject`;
+    let query = `SELECT * FROM passwords`;
     connection.query(query,(err, results) => {
       if (err) {
         return func(err);

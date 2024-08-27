@@ -24,7 +24,7 @@ export function Add(serverAddress, Obj) {
   })
     .then((response) => {
       if (response.ok) {
-        console.log("Password added successfully");
+        console.log(serverAddress+" added successfully");
       }
       return response.json();
     })
@@ -48,6 +48,22 @@ export function Update(query, updatedData) {
       return json;
     });
 }
+
+export function UpdateFeedback(lessonId, feedback) {
+  const query = `/lesson/${lessonId}/feedback`;
+  return fetch(serverPath + query, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ feedback }),
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      return json;
+    });
+}
+
 
 export function Delete(serverAddress) {
   let fullpath = serverPath + serverAddress;
