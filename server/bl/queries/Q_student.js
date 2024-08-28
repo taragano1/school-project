@@ -3,18 +3,24 @@ const connection = require("../../dal/connectToDB");
 
 //INSERT
 
-function insertStudent(id , clas,specialization_id,func) {
-  connection.query(
-    `INSERT INTO student ( id ,class, specialization_id ) VALUES (?, ?,?)`,
-    [id , clas , specialization_id],
-    (err, result) => {
-      if (err) {
-        return func(err);
+function insertStudent(id, clas, specialization_id) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `INSERT INTO student (id, class, specialization_id) VALUES (?, ?, ?)`,
+      [id, clas, specialization_id],
+      (err, result) => {
+        if (err) {
+          console.log("Error inserting student:", err);
+          reject(err); // במקרה של שגיאה, ההבטחה תידחה עם השגיאה
+        } else {
+          console.log("Student inserted with ID:", result.id);
+          resolve(result.insertId); // במקרה של הצלחה, ההבטחה תתקבל עם ה-ID שנוסף
+        }
       }
-      func(null, result.insertId);
-    }
-  );
+    );
+  });
 }
+
 
 //SELECT
 

@@ -35,7 +35,7 @@ app.post("/users", (req, res) => {
   const { id, fname, lname, email, phone, city, birthday, address, gender_id,typeOfUser,status } = req.body;
 
   // בדיקה אם כל הנתונים הנדרשים קיימים
-  if (!id || !fname || !lname || !email || !phone || !city || !birthday || !address || !gender_id) {
+  if (!id || !fname || !lname || !email || !phone || !city || !birthday || !address || !gender_id ||!typeOfUser||!status) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
@@ -53,7 +53,7 @@ app.post("/users", (req, res) => {
       if (err) {
         return res.status(500).json({ error: "Database insert error" });
       }
-      res.json({ id: insertId });
+      res.json({ id: id });
     });
   });
 });

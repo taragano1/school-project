@@ -3,18 +3,25 @@ const connection = require("../../dal/connectToDB");
 
 //INSERT
 
-function insertPassword(id, password_hash, func) {
-  connection.query(
-    `INSERT INTO passwords (id, password_hash) VALUES (?, ?)`,
-    [id, password_hash],
-    (err, result) => {
-      if (err) {
-        return func(err);
+function insertPassword(id, password_hash) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `INSERT INTO passwords (id, password_hash) VALUES (?, ?)`,
+      [id, password_hash],
+      (err, result) => {
+        if (err) {
+          console.log("Error inserting password:", err);
+          reject(err); // במקרה של שגיאה, ההבטחה תידחה עם השגיאה
+        } else {
+          console.log("Password inserted with ID:", result.insertId);
+          resolve(result.insertId); // במקרה של הצלחה, ההבטחה תתקבל עם ה-ID שנוסף
+        }
       }
-      func(null, result.insertId);
-    }
-  );
+    );
+  });
 }
+
+
 
 //SELECT
 

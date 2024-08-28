@@ -37,15 +37,16 @@ app.get("/teachers/:id", (req, res) => {
 });
 
 // POST new teacher
-app.post("/teachers", (req, res) => {
-  const { id, resume, specialization} = req.body;
-  insertTeacher(id, resume, specialization, (err, insertId) => {
-    if (err) {
-      return res.status(500).json({ error: "Database insert error" });
-    }
-    res.json({ id: insertId });
-  });
+app.post("/teachers", async (req, res) => {
+  try {
+    const { id, resume, specialization_id } = req.body;
+    const insertId = await insertTeacher(id, resume, specialization_id);
+    res.json({ id: id });
+  } catch (err) {
+    res.status(500).json({ error: "Database insert error" });
+  }
 });
+
 
 // PUT update teacher
 app.put("/teachers/:id", (req, res) => {

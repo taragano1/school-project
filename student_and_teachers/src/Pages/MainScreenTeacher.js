@@ -3,8 +3,10 @@ import { Read, Update, Delete } from "../CRUD";
 import TeacherDetails from "../components/TeacherDetails";
 import AddLessonPopup from "../components/AddLessonPopup";
 import { useNavigate } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
-export default function TeacherPage({ teacherId }) {
+export default function MainScreenTeacher() {
+  const { teacherId } = useParams();
   const [showDetails, setShowDetails] = useState(false);
   const [lessons, setLessons] = useState([]);
   const [showAddLessonPopup, setShowAddLessonPopup] = useState(false);
@@ -15,6 +17,7 @@ export default function TeacherPage({ teacherId }) {
     // פונקציה לשליפת פרטי המורה
     const fetchTeacher = async () => {
       try {
+        console.log(teacherId);
         const data = await Read(`/api/users/${teacherId}`);
         setTeacher(data);
       } catch (error) {
@@ -68,7 +71,7 @@ export default function TeacherPage({ teacherId }) {
 
   return (
     <div className="teacher-page">
-      {teacher ? (
+  
         <>
           <h1>עמוד המורה - {teacher.fname} {teacher.lname}</h1>
           <button onClick={() => setShowDetails(true)}>הצג פרטי מורה</button>
@@ -124,9 +127,7 @@ export default function TeacherPage({ teacherId }) {
             />
           )}
         </>
-      ) : (
-        <p>טוען פרטי מורה...</p>
-      )}
+
     </div>
   );
 }
