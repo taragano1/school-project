@@ -39,8 +39,9 @@ app.get("/teachers/:id", (req, res) => {
 // POST new teacher
 app.post("/teachers", async (req, res) => {
   try {
-    const { id, resume, specialization_id } = req.body;
-    const insertId = await insertTeacher(id, resume, specialization_id);
+    const { id, resume, specialization } = req.body;
+    console.log(specialization+"api")
+    const insertId = await insertTeacher(id, resume, specialization);
     res.json({ id: id });
   } catch (err) {
     res.status(500).json({ error: "Database insert error" });

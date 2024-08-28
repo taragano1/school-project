@@ -59,7 +59,7 @@ export default function SignInStudent() {
       address: formData.address,
       gender_id: genderId,
       typeOfUser:3, 
-      status:true
+      status:1
     };
     console.log("log2")
     // Save user data locally (optional)

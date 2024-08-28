@@ -4,6 +4,7 @@ const connection = require("../../dal/connectToDB");
 //INSERT
 
 function insertTeacher(id, resume, specialization) {
+  console.log(specialization+"q")
   return new Promise((resolve, reject) => {
     connection.query(
       `INSERT INTO teacher (id, resume, specialization) VALUES (?, ?, ?)`,

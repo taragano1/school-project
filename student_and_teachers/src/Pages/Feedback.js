@@ -1,27 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { Update, Read } from "../CRUD"; // Import the Read function to fetch lesson data
+import { Update, Read } from "../CRUD";
 import './Feedback.css';
 
-const Feedback = ({ lessonId, sender }) => {
+const Feedback = ({ lessonId, sender, show }) => {
     const [rating, setRating] = useState(0);
     const [textFeedback, setTextFeedback] = useState("");
     const [lesson, setLesson] = useState(null);
-    
 
-    // Fetch the lesson details when the component mounts
     useEffect(() => {
-        const getLesson = async () => {
-            try {
-                const fetchedLesson = await Read(`/lesson/${lessonId}`);
-                setLesson(fetchedLesson);
-                setRating(fetchedLesson.rating || 0); // Initialize rating from fetched lesson
-                setTextFeedback(fetchedLesson.feedback || ""); // Initialize feedback from fetched lesson
-            } catch (error) {
-                console.error("Error fetching lesson data:", error);
-            }
-        };
-        getLesson();
-    }, [lessonId]);
+        if (show) {
+            const getLesson = async () => {
+                try {
+                    const fetchedLesson = await Read(`/lesson/${lessonId}`);
+                    setLesson(fetchedLesson);
+                    setRating(fetchedLesson.rating || 0);
+                    setTextFeedback(fetchedLesson.feedback || "");
+                } catch (error) {
+                    console.error("Error fetching lesson data:", error);
+                }
+            };
+            getLesson();
+        }
+    }, [lessonId, show]);
+
+    if (!show) {
+        return null; // Don't render the component if show is false
+    }
 
     const handleRatingClick = (newRating) => {
         if (sender) {
@@ -31,11 +35,10 @@ const Feedback = ({ lessonId, sender }) => {
 
     const handleSubmit = async () => {
         if (!sender) {
-            return; // Do nothing if sender is false
+            return;
         }
 
         if (lesson) {
-            // Update the lesson object with new feedback and rating
             const updatedLesson = {
                 ...lesson,
                 rating,
@@ -43,12 +46,10 @@ const Feedback = ({ lessonId, sender }) => {
             };
 
             try {
-                // Update the feedback on the server
                 await Update(`/lesson/${lessonId}`, updatedLesson);
                 alert("Feedback submitted successfully!");
             } catch (error) {
                 console.error("Error updating feedback:", error);
-                
                 alert("Failed to submit feedback.");
             }
         }
@@ -82,3 +83,4 @@ const Feedback = ({ lessonId, sender }) => {
 };
 
 export default Feedback;
+
