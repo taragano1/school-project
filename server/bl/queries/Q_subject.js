@@ -45,15 +45,18 @@ function insertSubject(subject) {
 
 //SELECT
 
-function selectSubject(func) {
-    let query = `SELECT * FROM subject`;
-    connection.query(query,(err, results) => {
-      if (err) {
-        return func(err);
-      }
-      func(null, results);
-    });
-  }
+function selectSubject() {
+  return new Promise((resolve, reject) => {
+      let query = `SELECT * FROM subject`;
+      connection.query(query, (err, results) => {
+          if (err) {
+              return reject(err);
+          }
+          resolve(results);
+      });
+  });
+}
+
   
   //UPDATE
 
