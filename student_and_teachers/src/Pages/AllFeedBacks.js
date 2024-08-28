@@ -11,7 +11,7 @@ const AllFeedBacks = () => {
 
     useEffect(() => {
         const getLessons = () => {
-            Read(`/lesson/${id}`).then((l) => {
+            Read(`/lessons/teacher/${id}`).then((l) => {
                 setLessons(l);
             });
         };

@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express.Router();
-const { selectLessonById, selectAllLessons, selectLessonByTeacher, insertLesson, updateLesson, deleteLesson  } = require("../../bl/queries/Q_lesson");
+const { selectLessonById, selectAllLessons, selectLessonByTeacher, insertLesson, updateLesson, deleteLesson, selectLessonByStudent  } = require("../../bl/queries/Q_lesson");
 
 app.get("/lesson/:id", (req, res) => {
   const lessonId = req.params.id;

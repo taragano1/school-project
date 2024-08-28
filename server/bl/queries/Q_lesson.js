@@ -133,6 +133,7 @@ function selectAllLessons(func) {
     updateFeedback,
     deleteLesson,
     deleteLessonByTeacher,
-    deleteLessonByStudent
+    deleteLessonByStudent,
+    selectLessonByStudent
   };
 
