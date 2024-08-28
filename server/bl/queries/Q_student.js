@@ -24,15 +24,19 @@ function insertStudent(id, clas, specialization_id) {
 
 //SELECT
 
-function selectStudent(func) {
+function selectStudent() {
+  return new Promise((resolve, reject) => {
     let query = `SELECT * FROM student`;
-    connection.query(query,(err, results) => {
+    connection.query(query, (err, results) => {
       if (err) {
-        return func(err);
+        return reject(err); // דחיית ה-Promise במקרה של שגיאה
       }
-      func(null, results);
+      resolve(results); // החזרת התוצאה במקרה של הצלחה
     });
-  }
+  });
+}
+
+
 
   
 //SELECT PART OF STUDENT BY ID

@@ -1,12 +1,22 @@
 let serverPath = "http://localhost:8000";
 
-
 export function Read(query) {
   let fullpath = serverPath + query;
+  console.log("Fetching URL:", fullpath); // הדפס את הכתובת המלאה
   return fetch(fullpath)
-    .then((respones) => respones.json())
+    .then((response) => {
+      console.log("Fetch Response:", response); // הדפס את התגובה
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((json) => {
       return json;
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+      throw error; // זרוק את השגיאה כדי לטפל בה במקום אחר אם צריך
     });
 }
 

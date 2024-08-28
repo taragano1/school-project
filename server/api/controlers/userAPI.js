@@ -7,15 +7,18 @@ const bcrypt = require("bcrypt"); // לצורך השוואת סיסמאות
 app.use(express.json());
 
 // GET request לקבלת משתמש לפי מזהה
-app.get("/users/:id", (req, res) => {
+app.get("/users/:id", async (req, res) => {
   const userId = req.params.id;
-  selectUsersById(userId, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Database query error" });
-    }
-    res.json(results);
-  });
+  try {
+    const results = await selectUsersById(userId);
+    console.log("Database results:", results); // הדפס את התוצאה מהמאגר
+    res.json(results); // שליחת התוצאה ללקוח
+  } catch (error) {
+    console.error("Database query error:", error); // הדפס את השגיאה
+    res.status(500).json({ error: "Database query error" }); // טיפול בשגיאה
+  }
 });
+
 
 // GET request לקבלת משתמש לפי אימייל
 app.get("/users/email/:email", (req, res) => {

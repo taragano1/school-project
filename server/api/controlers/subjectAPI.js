@@ -2,7 +2,7 @@ const express = require("express");
 const { selectSubject } = require("../../bl/queries/Q_subject");
 const app = express.Router();
 
-app.get("/api/subjects", (req, res) => {
+app.get("/subjects", (req, res) => {
     selectSubject((err, results) => {
       if (err) {
         return res.status(500).json({ error: "Database query error" });
@@ -10,3 +10,14 @@ app.get("/api/subjects", (req, res) => {
       res.json(results);
     });
   });
+
+  app.post("/subjects", async (req, res) => {
+    const { subject } = req.body; // קבלת המידע מהבקשה
+    try {
+      const insertId = await insertSubject(subject); // קריאה לפונקציה
+      res.json({ id: insertId }); // שליחת ה-ID ללקוח
+    } catch (error) {
+      res.status(500).json({ error: "Database insertion error" }); // טיפול בשגיאה
+    }
+  });
+  module.exports = app;

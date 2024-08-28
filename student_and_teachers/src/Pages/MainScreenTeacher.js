@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 
 export default function MainScreenTeacher() {
-  const { teacherId } = useParams();
+  const  {teacherId} = useParams();
   const [showDetails, setShowDetails] = useState(false);
   const [lessons, setLessons] = useState([]);
   const [showAddLessonPopup, setShowAddLessonPopup] = useState(false);
@@ -14,31 +14,42 @@ export default function MainScreenTeacher() {
   const navigate = useNavigate(); // ה-hook לניווט
 
   useEffect(() => {
+    console.log(teacherId);
+
     // פונקציה לשליפת פרטי המורה
     const fetchTeacher = async () => {
       try {
-        console.log(teacherId);
         const data = await Read(`/api/users/${teacherId}`);
+        console.log("Teacher data:", data); // הדפס את המידע שהתקבל
         setTeacher(data);
       } catch (error) {
         console.error("Error fetching teacher details:", error);
       }
     };
+    
+    
 
     // פונקציה לשליפת שיעורים
     const fetchLessons = async () => {
       try {
-        const data = await Read(`/api/lessons/${teacherId}`);
+        const response = await Read(`/lessons/teacher/${teacherId}`);
+        console.log("Full Response:", response); // הדפס את התגובה המלאה
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Lessons data:", data);
         setLessons(data);
       } catch (error) {
         console.error("Error fetching lessons:", error);
       }
     };
+    
 
-    if (teacherId) {
+    if(teacherId)
       fetchTeacher();
       fetchLessons();
-    }
+    
   }, [teacherId]);
 
   const handleCancelLesson = (lessonId) => {
@@ -71,7 +82,7 @@ export default function MainScreenTeacher() {
 
   return (
     <div className="teacher-page">
-  
+      {teacher ? (
         <>
           <h1>עמוד המורה - {teacher.fname} {teacher.lname}</h1>
           <button onClick={() => setShowDetails(true)}>הצג פרטי מורה</button>
@@ -127,7 +138,9 @@ export default function MainScreenTeacher() {
             />
           )}
         </>
-
+      ) : (
+        <p>מתבצע טעינה...</p>
+      )}
     </div>
   );
 }

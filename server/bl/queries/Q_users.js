@@ -40,15 +40,21 @@ function selectUsers(func) {
 
 
 //SELECT  BY ID
-function selectUsersById(id, func) {
-  let query = `SELECT * FROM users WHERE id=?`;
-  connection.query(query, [id], (err, results) => {
-    if (err) {
-      return func(err);
-    }
-    func(null, results);
+function selectUsersById(id) {
+  return new Promise((resolve, reject) => {
+    let query = `SELECT * FROM users WHERE id=?`;
+    connection.query(query, [id], (err, results) => {
+      if (err) {
+        console.error("Database query error:", err); // הדפס את השגיאה
+        return reject(err); // דחיית ה-Promise במקרה של שגיאה
+      }
+      console.log("Query results:", results); // הדפס את התוצאות
+      resolve(results); // החזרת התוצאה במקרה של הצלחה
+    });
   });
 }
+
+
 
 //SELECT  BY CITY
 

@@ -22,25 +22,27 @@ app.get("/lessons", (req, res) => {
   });
 });
 
-app.get("/lessons/teacher/:id", (req, res) => {
-  const teacherId = req.params.id;
-  selectLessonByTeacher(teacherId, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Database query error" });
-    }
-    res.json(results);
-  });
+app.get("/lessons/teacher/:id_teacher", async (req, res) => {
+  const id_teacher = req.params.id_teacher;
+  try {
+    const results = await selectLessonByTeacher(id_teacher);
+    res.json(results); // שליחת התוצאה ללקוח
+  } catch (error) {
+    res.status(500).json({ error: "Database query error" }); // טיפול בשגיאה
+  }
 });
 
-app.post("/lesson", (req, res) => {
-    const { id_teacher, id_subject, id_student, rating, feedback, date, hour } = req.body;
-    insertLesson(id_teacher, id_subject, id_student, rating, feedback, date, hour, (err, insertId) => {
-      if (err) {
-        return res.status(500).json({ error: "Database insert error" });
-      }
-      res.json({ id: insertId });
-    });
-  });
+
+app.post("/lesson", async (req, res) => {
+  const { id_teacher, id_subject, id_student, rating, feedback, date, hour } = req.body;
+  
+  try {
+    const insertId = await insertLesson(id_teacher, id_subject, id_student, rating, feedback, date, hour);
+    res.json({ id: insertId });
+  } catch (error) {
+    res.status(500).json({ error: "Database insert error" });
+  }
+});
 
   app.put("/lesson/:id", (req, res) => {
     const lessonId = req.params.id; // Extract lesson ID from URL parameter

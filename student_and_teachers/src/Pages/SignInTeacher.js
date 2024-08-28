@@ -79,7 +79,7 @@ export default function SignInTeacher() {
       address: formData.address,
       gender_id: 1,
       typeOfUser:2, 
-      status:true
+      status:1
     };
 
     // שמירת נתוני המשתמש המקומיים (אופציונלי)

@@ -12,14 +12,15 @@ const {deletePassword}=require("../../bl/queries/Q_passwords");
 const app = express.Router();
 
 // GET all students
-app.get("/students", (req, res) => {
-  selectStudent((err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Database query error" });
-    }
-    res.json(results);
-  });
+app.get("/students", async (req, res) => {
+  try {
+    const results = await selectStudent(); // קריאה לפונקציה
+    res.json(results); // שליחת התוצאה ללקוח
+  } catch (error) {
+    res.status(500).json({ error: "Database query error" }); // טיפול בשגיאה
+  }
 });
+
 
 // GET student by ID
 app.get("/students/:id", (req, res) => {

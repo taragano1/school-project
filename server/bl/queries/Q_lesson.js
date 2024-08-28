@@ -2,18 +2,21 @@ const { query } = require("express");
 const connection = require("../../dal/connectToDB");
 
 //INSERT
-function insertLesson(id_teacher , id_subject , id_student , rating , feedback ,date , hour ,func) {
-  connection.query(
-    `INSERT INTO users ( id_teacher , id_subject , id_student , rating , feedback ,date , hour) VALUES (?, ?, ?, ?, ?,? ,?)`,
-    [id_teacher , id_subject , id_student , rating , feedback ,date , hour],
-    (err, result) => {
-      if (err) {
-        return func(err);
+function insertLesson(id_teacher, id_subject, id_student, rating, feedback, date, hour) {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `INSERT INTO lesson (id_teacher, id_subject, id_student, rating, feedback, date, hour) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [id_teacher, id_subject, id_student, rating, feedback, date, hour],
+      (err, result) => {
+        if (err) {
+          return reject(err); // דחיית ה-Promise במקרה של שגיאה
+        }
+        resolve(result.insertId); // החזרת ה-ID שהוזן במקרה של הצלחה
       }
-      func(null, result.insertId);
-    }
-  );
+    );
+  });
 }
+
 
 //SELECT
 function selectAllLessons(func) {
@@ -37,16 +40,20 @@ function selectAllLessons(func) {
     });
   }
   
-  function selectLessonByTeacher( id_teacher, func) {
-    let query = `SELECT * FROM lesson WHERE id_teacher=?`;
-
-    connection.query(query, [id_teacher], (err, results) => {
-      if (err) {
-        return func(err);
-      }
-      func(null, results);
+  function selectLessonByTeacher(id_teacher) {
+    return new Promise((resolve, reject) => {
+      let query = `SELECT * FROM lesson WHERE id_teacher=?`;
+      connection.query(query, [id_teacher], (err, results) => {
+        if (err) {
+          console.error("Query error:", err); // הוסף לוג לשגיאות
+          return reject(err);
+        }
+        console.log("Query results:", results); // הוסף לוג לתוצאות
+        resolve(results);
+      });
     });
   }
+  
 
   //UPDATE
   function updateLesson(id, columnName, newData, func) {

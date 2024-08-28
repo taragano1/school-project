@@ -12,6 +12,7 @@ const genderAPI = require("../controlers/genderAPI");
 const passwordAPI = require("../controlers/passwordAPI");
 const specializationAPI = require("../controlers/specializationAPI");
 const teacher_docAPI = require("../controlers/teacher_docAPI");
+const subjectAPI=require("../controlers/subjectAPI")
 
 // Import the routes
 //const usersAPI = require("./userAPI");
@@ -35,7 +36,7 @@ app.use('/api', genderAPI);
 app.use('/api', specializationAPI);
 app.use('/api', teacher_docAPI);
 app.use('/api', passwordAPI);
-
+app.use('/api', subjectAPI);
 
 
 app.get("/", (req, res) => {
