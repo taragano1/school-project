@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express.Router();
-const { selectLessonById, selectAllLessons, selectLessonByTeacher, insertLesson, updateLesson, deleteLesson  } = require("../../bl/queries/Q_lesson");
+const { selectLessonById, selectAllLessons, selectLessonByTeacher, insertLesson, updateLesson, deleteLesson, selectLessonByStudent  } = require("../../bl/queries/Q_lesson");
 
 app.get("/lesson/:id", (req, res) => {
   const lessonId = req.params.id;
@@ -32,9 +32,19 @@ app.get("/lessons/teacher/:id", (req, res) => {
   });
 });
 
+app.get("/lessons/student/:id", (req, res) => {
+  const studentId = req.params.id;
+  selectLessonByStudent(studentId, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database query error" });
+    }
+    res.json(results);
+  });
+});
+
 app.post("/lesson", (req, res) => {
-    const { id_teacher, id_subject, id_student, rating, feedback, date, hour } = req.body;
-    insertLesson(id_teacher, id_subject, id_student, rating, feedback, date, hour, (err, insertId) => {
+    const { id_teacher, id_subject, id_student, rating, feedback, date, hour,status } = req.body;
+    insertLesson(id_teacher, id_subject, id_student, rating, feedback, date, hour,status, (err, insertId) => {
       if (err) {
         return res.status(500).json({ error: "Database insert error" });
       }

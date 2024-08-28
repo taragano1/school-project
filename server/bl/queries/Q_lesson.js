@@ -2,10 +2,10 @@ const { query } = require("express");
 const connection = require("../../dal/connectToDB");
 
 //INSERT
-function insertLesson(id_teacher , id_subject , id_student , rating , feedback ,date , hour ,func) {
+function insertLesson(id_teacher , id_subject , id_student , rating , feedback ,date , hour,status ,func) {
   connection.query(
-    `INSERT INTO users ( id_teacher , id_subject , id_student , rating , feedback ,date , hour) VALUES (?, ?, ?, ?, ?,? ,?)`,
-    [id_teacher , id_subject , id_student , rating , feedback ,date , hour],
+    `INSERT INTO users ( id_teacher , id_subject , id_student , rating , feedback ,date , hour,status) VALUES (?, ?, ?, ?, ?,? ,?,?)`,
+    [id_teacher , id_subject , id_student , rating , feedback ,date , hour,status],
     (err, result) => {
       if (err) {
         return func(err);
@@ -41,6 +41,17 @@ function selectAllLessons(func) {
     let query = `SELECT * FROM lesson WHERE id_teacher=?`;
 
     connection.query(query, [id_teacher], (err, results) => {
+      if (err) {
+        return func(err);
+      }
+      func(null, results);
+    });
+  }
+
+  function selectLessonByStudent( id_student, func) {
+    let query = `SELECT * FROM lesson WHERE id_student=?`;
+
+    connection.query(query, [id_student], (err, results) => {
       if (err) {
         return func(err);
       }
@@ -126,6 +137,7 @@ function selectAllLessons(func) {
     updateFeedback,
     deleteLesson,
     deleteLessonByTeacher,
-    deleteLessonByStudent
+    deleteLessonByStudent,
+    selectLessonByStudent
   };
 

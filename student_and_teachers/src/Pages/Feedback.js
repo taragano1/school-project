@@ -1,61 +1,82 @@
-import React, { useState } from "react";
-import { UpdateFeedback } from "../CRUD"; // Import the UpdateFeedback function from your CRUD utility
+import React, { useState, useEffect } from "react";
+import { Update, Read } from "../CRUD"; // Import the Read function to fetch lesson data
 import './Feedback.css';
 
-const Feedback = ({ lessonId, onClose }) => {
+const Feedback = ({ lessonId, sender }) => {
     const [rating, setRating] = useState(0);
-    const [feedback, setFeedback] = useState("");
+    const [textFeedback, setTextFeedback] = useState("");
+    const [lesson, setLesson] = useState(null);
+    
 
-    const handleRating = (value) => {
-        setRating(value);
+    // Fetch the lesson details when the component mounts
+    useEffect(() => {
+        const getLesson = async () => {
+            try {
+                const fetchedLesson = await Read(`/lesson/${lessonId}`);
+                setLesson(fetchedLesson);
+                setRating(fetchedLesson.rating || 0); // Initialize rating from fetched lesson
+                setTextFeedback(fetchedLesson.feedback || ""); // Initialize feedback from fetched lesson
+            } catch (error) {
+                console.error("Error fetching lesson data:", error);
+            }
+        };
+        getLesson();
+    }, [lessonId]);
+
+    const handleRatingClick = (newRating) => {
+        if (sender) {
+            setRating(newRating);
+        }
     };
 
-    const handleFeedbackChange = (event) => {
-        setFeedback(event.target.value);
-    };
+    const handleSubmit = async () => {
+        if (!sender) {
+            return; // Do nothing if sender is false
+        }
 
-    const handleSubmit = () => {
-        // Update the feedback using the CRUD utility function
-        UpdateFeedback(lessonId, feedback)
-            .then((response) => {
-                if (response.affectedRows > 0) {
-                    alert("Feedback submitted successfully");
-                    onClose(); // Close the feedback form or navigate away
-                } else {
-                    alert("Failed to submit feedback");
-                }
-            })
-            .catch((error) => {
-                console.error("Error submitting feedback:", error);
-                alert("Error submitting feedback");
-            });
+        if (lesson) {
+            // Update the lesson object with new feedback and rating
+            const updatedLesson = {
+                ...lesson,
+                rating,
+                feedback: textFeedback
+            };
+
+            try {
+                // Update the feedback on the server
+                await Update(`/lesson/${lessonId}`, updatedLesson);
+                alert("Feedback submitted successfully!");
+            } catch (error) {
+                console.error("Error updating feedback:", error);
+                
+                alert("Failed to submit feedback.");
+            }
+        }
     };
 
     return (
         <div className="feedback-container">
             <h1>Feedback</h1>
-            <label>דירוג השיעור</label>
-            <div className="star-rating">
-                {[...Array(5)].map((_, index) => (
+            <div className="rating">
+                {[1, 2, 3, 4, 5].map((star) => (
                     <span
-                        key={index}
-                        className={index < rating ? "star filled" : "star"}
-                        onClick={() => handleRating(index + 1)}
+                        key={star}
+                        className={`star ${rating >= star ? "filled" : ""}`}
+                        onClick={() => handleRatingClick(star)}
                     >
                         ★
                     </span>
                 ))}
             </div>
-            <label>פירוט</label>
             <textarea
-                rows="4"
-                cols="50"
-                value={feedback}
-                onChange={handleFeedbackChange}
-            ></textarea>
-            <button className="submit-button" onClick={handleSubmit}>
-                שלח משוב
-            </button>
+                value={textFeedback}
+                onChange={(e) => setTextFeedback(e.target.value)}
+                placeholder="Enter your feedback..."
+                rows={4}
+                className="feedback-textarea"
+                disabled={!sender}
+            />
+            <button onClick={handleSubmit} className="submit-button" disabled={!sender}>Submit Feedback</button>
         </div>
     );
 };
