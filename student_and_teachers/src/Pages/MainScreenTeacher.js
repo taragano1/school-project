@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from "react-router-dom";
 
 export default function MainScreenTeacher() {
-  const  {teacherId} = useParams();
+  const { id } = useParams();
   const [showDetails, setShowDetails] = useState(false);
   const [lessons, setLessons] = useState([]);
   const [showAddLessonPopup, setShowAddLessonPopup] = useState(false);
@@ -14,25 +14,23 @@ export default function MainScreenTeacher() {
   const navigate = useNavigate(); // ה-hook לניווט
 
   useEffect(() => {
-    console.log(teacherId);
+    console.log(id);
 
     // פונקציה לשליפת פרטי המורה
     const fetchTeacher = async () => {
       try {
-        const data = await Read(`/api/users/${teacherId}`);
-        console.log("Teacher data:", data); // הדפס את המידע שהתקבל
-        setTeacher(data);
+        const data = await Read(`/api/users/${id}`);
+        console.log("Teacher data:", data[0]); // הדפס את המידע שהתקבל
+        setTeacher(data[0]);
       } catch (error) {
         console.error("Error fetching teacher details:", error);
       }
     };
-    
-    
 
     // פונקציה לשליפת שיעורים
     const fetchLessons = async () => {
       try {
-        const response = await Read(`/lessons/teacher/${teacherId}`);
+        const response = await Read(`/lessons/teacher/${id}`);
         console.log("Full Response:", response); // הדפס את התגובה המלאה
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -44,13 +42,12 @@ export default function MainScreenTeacher() {
         console.error("Error fetching lessons:", error);
       }
     };
-    
 
-    if(teacherId)
+    if (id) {
       fetchTeacher();
       fetchLessons();
-    
-  }, [teacherId]);
+    }
+  }, [id]);
 
   const handleCancelLesson = (lessonId) => {
     if (window.confirm("האם אתה בטוח שברצונך לבטל את השיעור הזה?")) {
@@ -87,10 +84,10 @@ export default function MainScreenTeacher() {
           <h1>עמוד המורה - {teacher.fname} {teacher.lname}</h1>
           <button onClick={() => setShowDetails(true)}>הצג פרטי מורה</button>
           <button onClick={() => setShowAddLessonPopup(true)}>הוסף שיעור חדש</button>
-          <button onClick={() => navigate(`/TeacherSchedule/${teacherId}`)}>לקביעת מערכת לשבוע הבא</button>
+          <button onClick={() => navigate(`/TeacherSchedule/${id}`)}>לקביעת מערכת לשבוע הבא</button>
 
           {/* טבלת שיעורים */}
-          <table>
+          {/* <table>
             <thead>
               <tr>
                 <th>תאריך</th>
@@ -117,18 +114,18 @@ export default function MainScreenTeacher() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
 
           {/* הצגת קומפוננטת פרטי המורה */}
-          {showDetails && (
+          {/* {showDetails && (
             <TeacherDetails
               teacher={teacher}
               onClose={() => setShowDetails(false)}
             />
-          )}
+          )} */}
 
           {/* הצגת קומפוננטת הוספת שיעור חדש */}
-          {showAddLessonPopup && (
+          {/* {showAddLessonPopup && (
             <AddLessonPopup
               show={showAddLessonPopup}
               onClose={() => setShowAddLessonPopup(false)}
@@ -136,10 +133,10 @@ export default function MainScreenTeacher() {
                 setLessons((prevLessons) => [...prevLessons, newLesson]);
               }}
             />
-          )}
+          )} */}
         </>
       ) : (
-        <p>מתבצע טעינה...</p>
+        <p>טוען נתוני מורה...</p>
       )}
     </div>
   );
