@@ -55,16 +55,16 @@ export default function SignInTeacher() {
 
     // המרה למספר עבור מגדר
     const genderMap = {
-      זכר: 1,
-      נקבה: 2,
+      זכר: 2,
+      נקבה: 1,
     };
     const genderId = genderMap[formData.gender];
 
     // המרה למספר עבור יכולת הוראה
     const studyNeedMap = {
-      יסודי: 0,
-      תיכון: 1,
-      אקדמאי: 2,
+      יסודי: 1,
+      תיכון: 2,
+      אקדמאי: 3,
     };
     const studyNeedId = studyNeedMap[formData.studyNeed];
 
@@ -77,7 +77,7 @@ export default function SignInTeacher() {
       city: formData.city,
       birthday: formData.birthDate,
       address: formData.address,
-      gender_id: genderId,
+      gender_id: 1,
       typeOfUser:2, 
       status:true
     };
@@ -85,15 +85,12 @@ export default function SignInTeacher() {
     // שמירת נתוני המשתמש המקומיים (אופציונלי)
     localStorage.setItem("LSCurrentUser", JSON.stringify(formData));
 
-    Add("/users", userPayload)
-      .then(() => Add("/passwords", { userId: formData.id, password: formData.password }))
-      .then(() => Add("/teachers", {
+    Add("/api/users", userPayload)
+      .then(() => Add("/api/passwords", { userId: formData.id, password: formData.password }))
+      .then(() => Add("/api/teachers", {
         id: formData.id,
         resume: formData.resume,
         specialization_id: studyNeedId,
-        subject: 0, // ערך ברירת מחדל
-        isSpecialEducation: formData.isSpecialEducation,
-        educationLevel: formData.educationLevel,
       }))
       .then(() => {
         // אחרי הוספת פרטי המשתמש והמורה, הוסף כל קובץ לטבלה teacher_doc
@@ -103,7 +100,7 @@ export default function SignInTeacher() {
             userName:formData.lname+formData.fname,
             document: file.url,
           };
-          return Add("/teacher_doc", document);
+          return Add("/api/teacher_doc", document);
         });
 
         return Promise.all(filePromises);

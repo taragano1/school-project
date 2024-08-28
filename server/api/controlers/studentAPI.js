@@ -36,15 +36,21 @@ app.get("/students/:id", (req, res) => {
 });
 
 // POST new student
-app.post("/students", (req, res) => {
-  const { id, clas, specialization_id } = req.body;
-  insertStudent(id, clas, specialization_id, (err, insertId) => {
-    if (err) {
-      return res.status(500).json({ error: "Database insert error" });
-    }
+app.post("/students", async (req, res) => {
+  try {
+    console.log(req.body);
+    const { id, clas, specialization_id } = req.body;
+
+    // ממתינים להשלמת הכנסת הנתונים
+    const insertId = await insertStudent(id, clas, specialization_id);
+
     res.json({ id: insertId });
-  });
+  } catch (err) {
+    console.error("Error during student insertion:", err);
+    res.status(500).json({ error: "Database insert error" });
+  }
 });
+
 
 // PUT update student
 app.put("/students/:id", (req, res) => {

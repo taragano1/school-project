@@ -3,25 +3,27 @@ const { query } = require("express");
 const connection = require("../../dal/connectToDB");
 
 //INSERT
-function insertUsers(id, fname, lname, email, phone, city, birthday, address, gender_id, func) {
+function insertUsers(id, fname, lname, email, phone, city, birthday, address, gender_id, typeOfUser, status, func = () => {}) {
   // בדיקה אם כל הנתונים הנדרשים קיימים
-  if (!id || !fname || !lname || !email || !phone || !city || !birthday || !address || !gender_id) {
+  if (!id || !fname || !lname || !email || !phone || !city || !birthday || !address || !gender_id || typeOfUser === undefined || status === undefined) {
     return func(new Error("All fields are required"));
   }
 
   // הכנסת הנתונים לטבלה
   connection.query(
-    `INSERT INTO users (id, fname, lname, email, phone, city, birthday, address, gender_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [id, fname, lname, email, phone, city, birthday, address, gender_id],
+    `INSERT INTO users (id, fname, lname, email, phone, city, birthday, address, gender_id, typeOfUser, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [id, fname, lname, email, phone, city, birthday, address, gender_id, typeOfUser, status],
     (err, result) => {
       if (err) {
-        console.log(id);
+        console.log("Error inserting user:", err);
         return func(err);
       }
+      console.log("User inserted with ID:", result.insertId);
       func(null, result.insertId);
     }
   );
 }
+
 
 
 //SELECT

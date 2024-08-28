@@ -41,9 +41,9 @@ export default function SignInStudent() {
   
     // Convert studyNeed to number
     const studyNeedMap = {
-      יסודי: 0,
-      תיכון: 1,
-      אקדמאי: 2,
+      יסודי: 1,
+      תיכון: 2,
+      אקדמאי: 3,
     };
     const studyNeedId = studyNeedMap[formData.studyNeed];
   
@@ -65,6 +65,8 @@ export default function SignInStudent() {
     // Save user data locally (optional)
     localStorage.setItem("LSCurrentUser", JSON.stringify(formData));
   console.log(formData);
+  console.log(userPayload.gender_id, genderMap[formData.gender]);
+  
   console.log(userPayload);
     // Add the user to the 'users' table
     Add("/api/users", userPayload)
@@ -85,7 +87,7 @@ export default function SignInStudent() {
       })
       .then(() => {
         // Navigate to the student main page
-        navigate(`/api/student/main/${formData.id}`);
+        navigate(`/student/main/${formData.id}`);
       })
       .catch((error) => console.error("Error:", error));
 
