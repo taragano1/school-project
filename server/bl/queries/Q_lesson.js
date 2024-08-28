@@ -19,15 +19,18 @@ function insertLesson(id_teacher, id_subject, id_student, rating, feedback, date
 
 
 //SELECT
-function selectAllLessons(func) {
-    let query = `SELECT * FROM lesson`;
-    connection.query(query,(err, results) => {
-      if (err) {
-        return func(err);
-      }
-      func(null, results);
+  function selectAllLessons() {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM lesson`;
+      connection.query(query, (err, results) => {
+        if (err) {
+          return reject(err); // במקרה של שגיאה דוחים את ה-Promise
+        }
+        resolve(results); // במקרה של הצלחה מחזירים את התוצאות
+      });
     });
   }
+  
 
   function selectLessonById( id, func) {
     let query = `SELECT * FROM lesson WHERE id=?`;
@@ -49,6 +52,18 @@ function selectAllLessons(func) {
           return reject(err);
         }
         console.log("Query results:", results); // הוסף לוג לתוצאות
+        resolve(results);
+      });
+    });
+  }
+  
+  function selectLessonByStudent(id_student) {
+    return new Promise((resolve, reject) => {
+      let query = `SELECT * FROM lesson WHERE id_student=?`;
+      connection.query(query, [id_student], (err, results) => {
+        if (err) {
+          return reject(err);
+        }
         resolve(results);
       });
     });
@@ -129,11 +144,12 @@ function selectAllLessons(func) {
     selectAllLessons,
     selectLessonById,
     selectLessonByTeacher,
+    selectLessonByStudent, // ודא שהפונקציה מיוצאת כאן
     updateLesson,
     updateFeedback,
     deleteLesson,
     deleteLessonByTeacher,
-    deleteLessonByStudent,
-    selectLessonByStudent
+    deleteLessonByStudent
   };
+  
 

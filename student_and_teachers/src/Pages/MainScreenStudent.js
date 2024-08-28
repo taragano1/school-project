@@ -131,7 +131,6 @@ export default function MainScreenStudent() {
 
   return (
     <div className="container">
-      {/* בדיקה אם myUser לא null לפני גישה ל-lname */}
       {myUser ? (
         <h1 className="title">שלום {myUser.lname}</h1>
       ) : (

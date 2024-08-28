@@ -2,14 +2,14 @@ const express = require("express");
 const { selectSubject } = require("../../bl/queries/Q_subject");
 const app = express.Router();
 
-app.get("/subjects", (req, res) => {
-    selectSubject((err, results) => {
-      if (err) {
-        return res.status(500).json({ error: "Database query error" });
-      }
-      res.json(results);
-    });
-  });
+app.get("/subjects", async (req, res) => {
+  try {
+    const results = await selectSubject();
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: "Database query error" });
+  }
+});
 
   app.post("/subjects", async (req, res) => {
     const { subject } = req.body; // קבלת המידע מהבקשה

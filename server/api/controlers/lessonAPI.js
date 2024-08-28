@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express.Router();
-const { selectLessonById, selectAllLessons, selectLessonByTeacher, insertLesson, updateLesson, deleteLesson, selectLessonByStudent  } = require("../../bl/queries/Q_lesson");
+const { selectLessonById, selectAllLessons, selectLessonByTeacher, insertLesson, updateLesson, deleteLesson  } = require("../../bl/queries/Q_lesson");
 
 app.get("/lesson/:id", (req, res) => {
   const lessonId = req.params.id;
@@ -12,15 +12,15 @@ app.get("/lesson/:id", (req, res) => {
   });
 });
 
-app.get("/lessons", (req, res) => {
-  selectAllLessons((err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Database query error" });
-    }
-    
-    res.json(results);
-  });
+app.get("/lessons", async (req, res) => {
+  try {
+    const results = await selectAllLessons(); // מחכים להבטחה להתממש
+    res.json(results); // שולחים את התוצאות ללקוח
+  } catch (err) {
+    res.status(500).json({ error: "Database query error" }); // טיפול בשגיאות
+  }
 });
+
 
 app.get("/lessons/teacher/:id_teacher", async (req, res) => {
   const id_teacher = req.params.id_teacher;
